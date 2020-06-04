@@ -1,0 +1,18 @@
+$spacer: .7rem;
+$table-cell-padding: .3rem;
+$font-size-base: .8rem;
+$font-weight-normal: 400;
+$link-color: #20a8d8;
+
+.dc-pannel {
+    animation: 1s cubic-bezier(0.77, 0, 0.175, 1) 0.5s forwards slideIn;
+    background: linear-gradient(58deg, #fc466b, #3f5efb);
+    border: 0;
+    color: #ffffff !important;
+    display: block;
+    max-height: 0;
+    opacity: 0.25;
+    overflow: hidden;
+    transition: max-height 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+    text-decoration: none;
+}

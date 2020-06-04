@@ -1,0 +1,191 @@
+@import "variables";
+@import "../../../node_modules/bootstrap/scss/bootstrap";
+
+.help-block {
+  color: red;
+}
+
+$break-small: 576px;
+
+$dark_red: #b62020;
+$dark_blue: #1a8fbf;
+$light_gray: #f0f2f5;
+$d_gray: #a6a7aa;
+$link-color: #20a8d8;
+
+body {
+  font-family: open sans,sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.icon {
+    font-family: "FontAwesome";
+    font-weight: 900;
+    font-size: 130%;
+    display: inline-block;
+    font-style: normal;
+    font-variant: normal;
+    text-rendering: auto;
+    -wzipebkit-font-smoothing: antialiased;
+}
+
+td.details-control::before {
+    @extend .icon;
+    content: "\f0fe";
+    color: $dark_blue;
+
+}
+
+tr.shown td.details-control::before {
+    @extend .icon;
+    content: "\f146";
+    color: $dark_red;
+}
+
+div.dataTables_wrapper div.dataTables_filter{
+    width:100%;
+    text-align: center;
+}
+
+div.dataTables_filter{
+    @extend .mb-2;
+}
+
+.dataTable {
+
+   th, tr {
+     text-align: center;
+   }
+
+}
+
+.toolbar {
+  float: left;
+  margin-bottom: 20px;
+
+  a {
+    margin-right: 20px;
+  }
+
+  @media screen and (max-width: $break-small) {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+.card {
+  background: white;
+  text-align: left;
+}
+
+.light-gray-bg{
+  background: $light_gray;
+  margin: 5px;
+}
+
+.btn-download1, .btn-download1:visited, .btn-download1:focus {
+  color: #fff;
+  background-color: $dark_blue;
+  border-color: $dark_blue;
+  float: left;
+}
+
+.btn-download2, btn-download2:visited .btn-download2:visited, .btn-download2:focus {
+  color: #fff;
+  background-color: $dark_red;
+  border-color: $dark_red;
+  float: right;
+}
+
+div.dataTables_paginate ul.pagination {
+  justify-content: center !important;
+}
+
+td.numeric {
+  text-align: right;
+  padding-right: 35px;
+}
+
+.page-link {
+  position: relative;
+  display: block;
+  padding: 0.5rem 0.75rem;
+  margin-left: -1px;
+  line-height: 1.25;
+  color: $link-color;
+  background-color: #fff;
+  border: 1px solid #c8ced3;
+}
+
+.page-item.active .page-link {
+    color: #fff;
+    background-color: $link-color;
+    border-color: $link-color;
+}
+
+
+.badge {
+    padding: 3px 5px;
+    font-size: 85%;
+    font-weight: 700;
+    color: black;  // default
+    border: 1px solid #dee2e6 !important
+}
+
+.badge-success {
+    color: #fff;
+    background-color: #9ccc65;
+}
+
+.badge-warning {
+    color: #23282c;
+    background-color: #ffc107;
+}
+.badge-primary {
+        color: #23282c;
+    background-color: #63c2de;
+}
+
+.badge-danger {
+  color: #fff;
+  background-color: #f86c6b;
+}
+
+.elements-cell, .btns-cell {
+  min-width: 180px;
+}
+
+.ui-dialog {
+  //extend Bootstrap modal
+  @extend .modal-content;
+
+  //.ui-dialog-titlebar {
+  //  @extend .modal-header;
+  //}
+
+  //.ui-button {
+  //  @extend .close;
+  //}
+
+  .ui-dialog-content {
+    @extend .modal-body;
+  }
+
+  .ui-widget-content a {
+    color: $link_color;
+  }
+
+}
+
+/* Styles for custom tooltip template */
+.tooltip-head{
+  color: #fff !important;
+  background: #000;
+  padding: 10px 10px 5px;
+  border-radius: 4px 4px 0 0;
+  text-align: center;
+  margin-bottom: -2px; /* Hide default tooltip rounded corner from top */
+}
+.tooltip-head .glyphicon{
+  vertical-align: bottom;
+}
