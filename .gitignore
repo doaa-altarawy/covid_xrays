@@ -135,3 +135,6 @@ data/raw
 data/processed
 
 .env
+
+docker_data/
+node_modules/
