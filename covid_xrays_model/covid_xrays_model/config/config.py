@@ -1,15 +1,25 @@
-from pathlib import Path
+import pathlib
+import covid_xrays_model
 import os
-import covid_xrays
+
 
 SEED = 0
 
-PACKAGE_ROOT = Path(covid_xrays.__file__).resolve().parent
+PACKAGE_ROOT = pathlib.Path(covid_xrays_model.__file__).resolve().parent
+TRAINED_MODEL_DIR = PACKAGE_ROOT / 'trained_models'
 
+# data
+TESTING_DATA_FILE = 'test_data.csv'  # for pytest
 
-DATA_DIR = Path(os.environ.get('DATA_DIR') or PACKAGE_ROOT / 'data')
+PIPELINE_NAME = 'covid_xrays_model'
+PIPELINE_SAVE_FILE = f'{PIPELINE_NAME}_output_v'
+
+DATA_DIR = pathlib.Path(os.environ.get('DATA_DIR') or PACKAGE_ROOT / 'data')
 RAW_DATA_DIR = DATA_DIR / 'raw'
 PROCESSED_DATA_DIR = DATA_DIR / 'processed'
+
+TRAIN_FILE = PROCESSED_DATA_DIR / 'train_split_v3.txt'
+TEST_FILE = PROCESSED_DATA_DIR / 'test_split_v3.txt'
 
 # Raw data path within the data dir
 # path to covid-19 dataset from https://github.com/ieee8023/covid-chestxray-dataset
@@ -36,3 +46,20 @@ rsna_csvname = RAW_DATA_DIR / rsna_datapath / 'stage_2_detailed_class_info.csv'
 # found that images that aren't pneunmonia and also not normal are classified as 0s
 rsna_csvname2 = RAW_DATA_DIR / rsna_datapath / 'stage_2_train_labels.csv'
 rsna_imgpath = RAW_DATA_DIR / rsna_datapath / 'stage_2_train_images'
+
+
+BEST_MODEL_PARAMS = {
+    'nn_model__batch_size': 8,
+    'nn_model__dropout': 0.01,
+    'nn_model__epochs': 50,
+    'nn_model__learning_rate': 0.0001,
+    'nn_model__nodes_per_layer': (10, 10, 7, 5),
+    'nn_model__optimizer': 'adam'}
+
+
+# For differential testing
+ACCEPTABLE_MODEL_DIFFERENCE = 1e-2
+
+
+
+

@@ -1,0 +1,14 @@
+include *.txt
+include *.md
+include *.cfg
+include *.pkl
+recursive-include ./covid_xrays_model/*
+
+include covid_xrays_model/trained_models/*.pkl
+include covid_xrays_model/VERSION
+
+include ./requirements.txt
+exclude *.log
+
+recursive-exclude * __pycache__
+recursive-exclude * *.py[co]
