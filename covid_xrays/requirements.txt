@@ -1,0 +1,30 @@
+flask>=1.1.0
+flask_bootstrap
+flask_mail
+Flask-WTF
+flask_login
+flask_caching
+flask_cors
+flask_mongoengine
+flask_admin
+flask_assets
+python-dotenv
+flask_moment
+flask_pageDown
+
+#
+email_validator
+
+# JS
+libsass
+jsmin
+
+# geoip
+geoip2
+
+#
+gunicorn
+
+# ML model library
+#covid_xrays_model @ git+https://github.com/doaa-altarawy/covid_xrays.git#egg=covid_xrays&subdirectory=covid_xrays_model
+
