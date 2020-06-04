@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    {%- block head %}
+        <title>COVID-19 Screening using X-ray images</title>
+
+    {%- block metas %}
+        <meta charset="UTF-8"/>
+        <meta name="description" content="COVID-19 Screening using X-ray images"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    {%- endblock metas %}
+
+    {%- block styles %}
+
+{#        {{ super() }}#}
+        <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+        <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+
+        <!-- Bootstrap 4 -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+        <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
+
+    {%- endblock styles %}
+    {%- endblock head %}
+  </head>
+
+  <body>
+  {% block body -%}
+
+  {% block navbar %}
+  {% endblock -%}
+
+    <main role="main" style="overflow:auto">
+    {%- block content %}
+        <!-- <div class="jumbotron"> -->
+
+        <div class="container">
+            {% for message in get_flashed_messages() %}
+            <div class="alert alert-warning">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                {{ message }}
+            </div>
+            {% endfor %}
+
+            {% block page_content %}{% endblock %}
+        </div>
+    {% endblock -%}
+    </main>
+
+    {%- block footer %}
+    {% endblock -%}
+
+    {%- block scripts %}
+
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+
+        <!-- Bootstrap 4 -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+        {% assets "js_base" %}
+            <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+        {% endassets %}
+
+        <!-- iframe resizing enabled-->
+{#        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/iframe-resizer/4.2.1/iframeResizer.contentWindow.min.js"></script>#}
+
+        {{ moment.include_moment() }}
+    {%- endblock scripts -%}
+
+    {%- endblock body -%}
+  </body>
+</html>
+

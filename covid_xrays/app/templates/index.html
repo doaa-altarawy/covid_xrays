@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}COVID-19 Screening{% endblock %}
+
+{% block navbar %}
+     {% include 'partials/navbar.html' %}
+{% endblock -%}
+
+{% block page_content %}
+
+    <ul>
+    {% for app in apps %}
+      <li><a href="{{ app.link }}">{{ app.name }}</a></li>
+    {% endfor %}
+    </ul>
+
+{% endblock %}
+
+{%- block footer %}
+    {% include 'partials/footer.html' %}
+{% endblock -%}
+
+{% block scripts %}
+{{ super() }}
+{{ pagedown.include_pagedown() }}
+{% endblock %}
