@@ -8,7 +8,7 @@ from ..models import save_access
 import logging
 from .forms import UploadForm
 import os
-
+from covid_xrays_model.predict import make_prediction_sample
 
 logger = logging.getLogger(__name__)
 
@@ -48,10 +48,18 @@ def app_in_iframe():
     if form.validate_on_submit():
         file = form.data_file.data
         filename = secure_filename(file.filename)
-        file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
-        flash(f'Thank you {form.name.data}, Data was uploaded successfully')
+        full_path = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
+        file.save(full_path)
 
-        # return redirect('/thank_you')
+        cat, prob = make_prediction_sample(full_path)
+
+        print('---------------------', cat, prob)
+
+        # flash(f'Probaility of having COVID19 is {prob["COVID-19"]:0.5f}')
+
+        msg = f'Probaility of having COVID19 is {prob["COVID-19"]:0.5f}'
+
+        return render_template('covid/thank_you.html', data=msg)
 
     # return the empty form
     return render_template('covid/upload_data_form.html', form=form)

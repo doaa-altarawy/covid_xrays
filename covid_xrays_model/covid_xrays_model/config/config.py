@@ -60,6 +60,6 @@ BEST_MODEL_PARAMS = {
 # For differential testing
 ACCEPTABLE_MODEL_DIFFERENCE = 1e-2
 
-
+TEST_SIZE = 0.2
 
 

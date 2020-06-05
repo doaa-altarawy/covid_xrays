@@ -13,7 +13,7 @@ with open(os.path.join(config.PACKAGE_ROOT, 'VERSION')) as version_file:
 
 # ----------- set up logging
 # MUST set this since the default for root logger is WARNING
-logging.basicConfig(level=logging.NOTSET)
+# logging.basicConfig(level=logging.NOTSET)
 
 logger = logging.getLogger(__name__)
 # logger.addHandler(logging.StreamHandler())

@@ -6,6 +6,7 @@ matplotlib
 seaborn
 jupyter
 keras
+tensorflow
 xlrd>=1.0.0
 
 # pip, or conda-forge
@@ -45,3 +46,4 @@ click
 #
 # # testing requirements
 pytest>=4.6.6
+fastai
