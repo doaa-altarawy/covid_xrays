@@ -13,7 +13,9 @@ logger = logging.getLogger(__name__)
 
 def make_prediction_sample(image_path):
 
-    learn = load_learner(config.TRAINED_MODEL_DIR, config.PIPELINE_SAVE_FILE + '.pkl')
+    save_file_name = f'{config.PIPELINE_SAVE_FILE}{_version}.pkl'
+
+    learn = load_learner(config.TRAINED_MODEL_DIR, save_file_name)
 
     image = open_image(image_path)
     cat = learn.predict(image)

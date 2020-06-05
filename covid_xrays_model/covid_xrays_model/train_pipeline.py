@@ -14,7 +14,7 @@ import pandas as pd
 logger = logging.getLogger(__name__)
 
 
-def run_training_sample(sample_size=200, image_size=400):
+def run_training_sample(sample_size=300, image_size=400):
     labels = pd.read_csv(config.PROCESSED_DATA_DIR / 'labels_full.csv')
 
     classes = ['pneumonia', 'normal', 'COVID-19']
@@ -37,7 +37,11 @@ def run_training_sample(sample_size=200, image_size=400):
     learn = cnn_learner(data, models.resnet18, metrics=accuracy)
 
     learn.fit(1)
-    learn.export(config.TRAINED_MODEL_DIR / config.PIPELINE_SAVE_FILE + '.pkl')
+
+    save_file_name = f'{config.PIPELINE_SAVE_FILE}{_version}.pkl'
+    save_path = config.TRAINED_MODEL_DIR / save_file_name
+
+    learn.export(save_path)
 
 
 
