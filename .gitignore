@@ -138,3 +138,4 @@ data/processed
 
 docker_data/
 node_modules/
+uploads/
