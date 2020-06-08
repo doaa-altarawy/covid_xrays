@@ -14,7 +14,7 @@ import pandas as pd
 logger = logging.getLogger(__name__)
 
 
-def run_training_sample(sample_size=600, image_size=400):
+def run_training_sample(sample_size=600, image_size=480):
     labels = pd.read_csv(config.PROCESSED_DATA_DIR / 'labels_full.csv')
 
     classes = ['pneumonia', 'normal', 'COVID-19']
@@ -38,17 +38,18 @@ def run_training_sample(sample_size=600, image_size=400):
 
     data.normalize()
 
-    learn = cnn_learner(data, models.resnet18, metrics=accuracy)
+    learn = cnn_learner(data, models.resnet50, metrics=accuracy)
     learn.model = torch.nn.DataParallel(learn.model)
 
-    # learn.fit(10)
-    learn.fit_one_cycle(10)
-
-    learn.unfreeze() # must be done before calling lr_find
     learn.lr_find()
-    learn.recorder.plot(return_fig=True).savefig('learning_rate.png', dpi=300)
+    learn.recorder.plot(return_fig=True).savefig('learning_rate.png', dpi=200)
 
-    # learn.fit_one_cycle(10, max_lr=slice(3e-3, 3e-2))
+    learn.fit_one_cycle(10)
+    learn.save('stage-50')
+
+    # learn.load('stage-50')
+    # learn.unfreeze()
+    # learn.fit_one_cycle(3, max_lr=slice(1e-6,1e-4))
 
     save_file_name = f'{config.PIPELINE_SAVE_FILE}{_version}.pkl'
     save_path = config.TRAINED_MODEL_DIR / save_file_name
