@@ -1,21 +1,19 @@
 import pandas as pd
 import numpy as np
 from covid_xrays_model.config import config
-from covid_xrays_model.processing.data_management import load_pipeline
+from covid_xrays_model.processing.data_management import load_saved_learner
 from covid_xrays_model.metrics import mape, percentile_rel_90
-from covid_xrays_model import __version__ as _version
 import logging
 from typing import Union, List
-from fastai.vision import load_learner, open_image
+from fastai.vision import open_image
 
 logger = logging.getLogger(__name__)
 
 
+
 def make_prediction_sample(image_path):
 
-    save_file_name = f'{config.PIPELINE_SAVE_FILE}{_version}.pkl'
-
-    learn = load_learner(config.TRAINED_MODEL_DIR, save_file_name)
+    learn = load_saved_learner()
 
     image = open_image(image_path)
     cat = learn.predict(image)
