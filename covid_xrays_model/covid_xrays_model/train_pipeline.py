@@ -20,6 +20,13 @@ def run_training_sample(sample_size=300, image_size=420, n_cycles=10):
     learn = cnn_learner(data, models.resnet34, metrics=accuracy)
     learn.model = torch.nn.DataParallel(learn.model)
 
+    # handle unbalanced data with weight
+    # ['COVID-19', 'normal', 'pneumonia']
+    # data.classes
+    weights = [5, 1, 1]
+    class_weights = torch.FloatTensor(weights)
+    learn.crit = torch.nn.CrossEntropyLoss(weight=class_weights)
+
     learn.fit_one_cycle(n_cycles)
 
     # learn.save('stage-50')
