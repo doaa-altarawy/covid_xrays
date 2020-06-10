@@ -68,6 +68,7 @@ def get_train_test_split(data: pd.DataFrame, test_size=config.TEST_SIZE, train_s
 def load_saved_learner():
     save_file_name = f'{config.PIPELINE_SAVE_FILE}{_version}.pkl'
     learn = load_learner(config.TRAINED_MODEL_DIR, save_file_name)
+    learn.layer_groups = joblib.load(filename=f'{config.TRAINED_MODEL_DIR}/{save_file_name}_layer_groups')
 
     return learn
 
@@ -78,6 +79,9 @@ def save_learner(learn: Learner):
     save_path = config.TRAINED_MODEL_DIR / save_file_name
 
     learn.export(save_path)
+
+    # fix bug in fastai, missing layer_groups
+    joblib.dump(learn.layer_groups, f'{save_path}_layer_groups')
 
 
 def save_pipeline(*, pipeline_to_persist):
