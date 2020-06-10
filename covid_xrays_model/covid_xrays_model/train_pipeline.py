@@ -13,14 +13,14 @@ from fastai.vision import models, cnn_learner, torch, accuracy, ClassificationIn
 logger = logging.getLogger(__name__)
 
 
-def run_training_sample(sample_size=300, image_size=420):
+def run_training_sample(sample_size=300, image_size=420, n_cycles=10):
 
     data = load_dataset(sample_size=sample_size, image_size=image_size)
 
     learn = cnn_learner(data, models.resnet34, metrics=accuracy)
     learn.model = torch.nn.DataParallel(learn.model)
 
-    learn.fit_one_cycle(10)
+    learn.fit_one_cycle(n_cycles)
 
     # learn.save('stage-50')
     # learn.load('stage-50')
@@ -59,7 +59,7 @@ def improve_saved_model(sample_size=300, image_size=420, n_cycles=5,
     if save:
         save_learner(learn)
 
-    _save_classification_interpert()
+    _save_classification_interpert(learn)
 
 
 def _save_classification_interpert(learn: Learner):
@@ -69,6 +69,8 @@ def _save_classification_interpert(learn: Learner):
     interp.plot_top_losses(9, return_fig=True, figsize=(15,15)).savefig('top_losses.png', dpi=200)
 
 
-
 if __name__ == '__main__':
-    run_training_sample()
+   run_training_sample(sample_size=600, image_size=420, n_cycles=10)
+   # plot_learning_rate(sample_size=600, image_size=420)
+   # improve_saved_model(sample_size=600, image_size=420, n_cycles=5, max_lr=slice(1e-6,1e-4), save=False)
+
