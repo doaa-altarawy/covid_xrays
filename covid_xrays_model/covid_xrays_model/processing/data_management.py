@@ -68,17 +68,37 @@ def get_train_test_split(data: pd.DataFrame, test_size=config.TEST_SIZE, train_s
     return X_train, X_test, y_train, y_test
 
 
-def load_saved_learner():
-    save_file_name = f'{config.PIPELINE_SAVE_FILE}{_version}.pkl'
+def _get_postfix(with_focal_loss=False,
+                 with_oversampling=False, sample_size=None):
+
+    postfix = ''
+    if with_oversampling:
+        postfix += '_oversampling'
+    if with_focal_loss:
+        postfix += '_focus_loss'
+    if sample_size:
+        postfix += f'_{sample_size}'
+
+    return postfix
+
+def load_saved_learner(with_focal_loss=False,
+                       with_oversampling=False, sample_size=None):
+
+    postfix = _get_postfix(with_focal_loss, with_oversampling, sample_size)
+
+    save_file_name = f'{config.PIPELINE_SAVE_FILE}{_version}{postfix}.pkl'
     learn = load_learner(config.TRAINED_MODEL_DIR, save_file_name)
     learn.layer_groups = joblib.load(filename=f'{config.TRAINED_MODEL_DIR}/{save_file_name}_layer_groups')
 
     return learn
 
 
-def save_learner(learn: Learner):
+def save_learner(learn: Learner, with_focal_loss=False,
+                 with_oversampling=False, sample_size=None):
 
-    save_file_name = f'{config.PIPELINE_SAVE_FILE}{_version}.pkl'
+    postfix = _get_postfix(with_focal_loss, with_oversampling, sample_size)
+
+    save_file_name = f'{config.PIPELINE_SAVE_FILE}{_version}{postfix}.pkl'
     save_path = config.TRAINED_MODEL_DIR / save_file_name
 
     learn.export(save_path)

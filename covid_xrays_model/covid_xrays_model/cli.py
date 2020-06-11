@@ -11,10 +11,13 @@ def main():
 @click.option('--sample_size', default=600, help='Number of images to use')
 @click.option('--image_size', default=420, help='Image size in pixels')
 @click.option('--n_cycles', default=10, help='Number of cycles (epochs) trough the whole data')
-def run_training(sample_size, image_size, n_cycles):
+@click.option('--focal_loss', is_flag=True, default=False, help='Use focal_loss function')
+@click.option('--oversampling', is_flag=True, default=False, help='Use oversampling')
+def run_training(sample_size, image_size, n_cycles, focal_loss, oversampling):
 
     click.echo("Running model trainning...")
-    run_training_sample(sample_size=sample_size, image_size=image_size, n_cycles=n_cycles)
+    run_training_sample(sample_size=sample_size, image_size=image_size, n_cycles=n_cycles,
+                        with_focal_loss=focal_loss, with_oversampling=oversampling)
 
 
 @main.command()
@@ -32,11 +35,14 @@ def get_learning_rate(sample_size, image_size):
 @click.option('--n_cycles', default=2, help='Number of cycles (epochs) trough the whole data')
 @click.option('--max_lr', default=slice(1e-6,1e-4), help='slice for learning rate. e.g., slice(1e-6,1e-4)')
 @click.option('--save', is_flag=True, default=False, help='Save the new trained model, replacing the old one')
-def improve_model(sample_size, image_size, n_cycles, max_lr, save):
+@click.option('--focal_loss', is_flag=True, default=False, help='Use focal_loss function')
+@click.option('--oversampling', is_flag=True, default=False, help='Use oversampling')
+def improve_model(sample_size, image_size, n_cycles, max_lr, save, focal_loss, oversampling):
 
     click.echo("Running improve model...")
     improve_saved_model(sample_size=sample_size, image_size=image_size, n_cycles=n_cycles,
-                        max_lr=max_lr, save=save)
+                        max_lr=max_lr, save=save, with_focal_loss=focal_loss,
+                        with_oversampling=oversampling)
 
 
 if __name__ == "__main__":

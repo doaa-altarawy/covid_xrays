@@ -15,25 +15,32 @@ from fastai.callbacks import OverSamplingCallback
 logger = logging.getLogger(__name__)
 
 
-def run_training_sample(sample_size=300, image_size=420, n_cycles=10):
+def run_training_sample(sample_size=300, image_size=420, n_cycles=10,
+                        with_focal_loss=True, with_oversampling=True):
 
     data = load_dataset(sample_size=sample_size, image_size=image_size)
 
+    callbacks = None
+    if with_oversampling:
+        callbacks = [partial(OverSamplingCallback)]
+
     learn = cnn_learner(data, models.resnet50, metrics=accuracy,
-                        callback_fns = [partial(OverSamplingCallback)]
+                        callback_fns = callbacks
                         )
     learn.model = torch.nn.DataParallel(learn.model)
 
     # handle unbalanced data with weight
     # ['COVID-19', 'normal', 'pneumonia']
-    learn.loss_fn = FocalLoss()
+    if with_focal_loss:
+        learn.loss_fn = FocalLoss()
 
     learn.fit_one_cycle(n_cycles)
 
     # learn.save('stage-50')
     # learn.load('stage-50')
 
-    save_learner(learn)
+    save_learner(learn, with_focal_loss=with_focal_loss, with_oversampling=with_oversampling,
+                 sample_size=sample_size)
 
     _save_classification_interpert(learn)
 
@@ -54,18 +61,21 @@ def plot_learning_rate(sample_size=300, image_size=420, load_learner=True):
 
 
 def improve_saved_model(sample_size=300, image_size=420, n_cycles=5,
-                     max_lr=slice(1e-6,1e-4), save=True):
+                        max_lr=slice(1e-6,1e-4), save=True,
+                        with_focal_loss=True, with_oversampling=True):
 
     data = load_dataset(sample_size=sample_size, image_size=image_size)
 
-    learn = load_saved_learner()
+    learn = load_saved_learner(with_focal_loss=with_focal_loss, with_oversampling=with_oversampling,
+                               sample_size=sample_size)
     learn.data = data
 
     learn.unfreeze()
     learn.fit_one_cycle(n_cycles, max_lr=max_lr)
 
     if save:
-        save_learner(learn)
+        save_learner(learn, with_focal_loss=with_focal_loss, with_oversampling=with_oversampling,
+                 sample_size=sample_size)
 
     _save_classification_interpert(learn)
 
