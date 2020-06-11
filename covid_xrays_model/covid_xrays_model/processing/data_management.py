@@ -9,14 +9,14 @@ from typing import List
 import pathlib
 import numpy as np
 from sklearn.model_selection import train_test_split
-from fastai.vision import load_learner, Learner, ImageDataBunch, get_transforms
+from fastai.vision import load_learner, Learner, ImageDataBunch, get_transforms, imagenet_stats
 
 
 logger = logging.getLogger(__name__)
 
 
 
-def load_dataset(*, sample_size=300, image_size=200) -> ImageDataBunch:
+def load_dataset(*, sample_size=600, image_size=420) -> ImageDataBunch:
 
     labels = pd.read_csv(config.PROCESSED_DATA_DIR / 'labels_full.csv')
 
@@ -31,16 +31,18 @@ def load_dataset(*, sample_size=300, image_size=200) -> ImageDataBunch:
     subset[['name', 'label']].to_csv(config.PROCESSED_DATA_DIR / 'labels.csv', index=False)
 
     tfms = get_transforms(do_flip=False,
-    #                       flip_vert=True,
-    #                       max_lighting=0.1, max_zoom=1.05, max_warp=0.
+                          max_lighting=0.1,
+                          max_zoom=1.05,
+                          max_warp=0.
                          )
+
 
     # will read from "labels.csv" in the data directory
     data = ImageDataBunch.from_csv(config.PROCESSED_DATA_DIR,
                                    ds_tfms=tfms,
                                    size=image_size)
 
-    data.normalize()
+    data.normalize(imagenet_stats)
 
     return data
 

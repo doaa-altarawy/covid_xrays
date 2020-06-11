@@ -5,7 +5,8 @@ np.random.seed(config.SEED)
 from covid_xrays_model.processing.data_management import save_learner, \
     load_saved_learner, load_dataset
 import logging
-
+from torch import nn
+import torch.nn.functional as F
 from fastai.vision import models, cnn_learner, torch, accuracy, ClassificationInterpretation, \
                           Learner
 
@@ -22,10 +23,7 @@ def run_training_sample(sample_size=300, image_size=420, n_cycles=10):
 
     # handle unbalanced data with weight
     # ['COVID-19', 'normal', 'pneumonia']
-    # data.classes
-    weights = [5, 1, 1]
-    class_weights = torch.FloatTensor(weights)
-    learn.crit = torch.nn.CrossEntropyLoss(weight=class_weights)
+    learn.loss_fn = FocalLoss()
 
     learn.fit_one_cycle(n_cycles)
 
@@ -45,7 +43,7 @@ def plot_learning_rate(sample_size=300, image_size=420, load_learner=True):
         learn = load_saved_learner()
         learn.data = data
     else:
-        learn = cnn_learner(data, models.resnet34, metrics=accuracy)
+        learn = cnn_learner(data, models.resnet50, metrics=accuracy)
         learn.model = torch.nn.DataParallel(learn.model)
 
     learn.lr_find()
@@ -74,6 +72,29 @@ def _save_classification_interpert(learn: Learner):
     interp = ClassificationInterpretation.from_learner(learn)
     interp.plot_confusion_matrix(return_fig=True).savefig('confusion_matrix.png', dpi=200)
     interp.plot_top_losses(9, return_fig=True, figsize=(15,15)).savefig('top_losses.png', dpi=200)
+
+
+
+class FocalLoss(nn.Module):
+    def __init__(self, alpha=1, gamma=2, logits=False, reduction='elementwise_mean'):
+        super(FocalLoss, self).__init__()
+        self.alpha = alpha
+        self.gamma = gamma
+        self.logits = logits
+        self.reduction = reduction
+
+    def forward(self, inputs, targets):
+        if self.logits:
+            BCE_loss = F.binary_cross_entropy_with_logits(inputs, targets, reduction='none')
+        else:
+            BCE_loss = F.binary_cross_entropy(inputs, targets, reduction='none')
+        pt = torch.exp(-BCE_loss)
+        F_loss = self.alpha * (1-pt)**self.gamma * BCE_loss
+
+        if self.reduction is None:
+            return F_loss
+        else:
+            return torch.mean(F_loss)
 
 
 if __name__ == '__main__':
