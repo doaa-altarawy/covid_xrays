@@ -19,7 +19,7 @@ def run_training_sample(sample_size=300, image_size=420, n_cycles=10):
 
     data = load_dataset(sample_size=sample_size, image_size=image_size)
 
-    learn = cnn_learner(data, models.resnet34, metrics=accuracy,
+    learn = cnn_learner(data, models.resnet50, metrics=accuracy,
                         callback_fns = [partial(OverSamplingCallback)]
                         )
     learn.model = torch.nn.DataParallel(learn.model)
