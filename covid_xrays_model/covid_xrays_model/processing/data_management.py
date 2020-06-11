@@ -40,7 +40,8 @@ def load_dataset(*, sample_size=600, image_size=420) -> ImageDataBunch:
     # will read from "labels.csv" in the data directory
     data = ImageDataBunch.from_csv(config.PROCESSED_DATA_DIR,
                                    ds_tfms=tfms,
-                                   size=image_size)
+                                   size=image_size,
+                                   bs=21)
 
     data.normalize(imagenet_stats)
 
