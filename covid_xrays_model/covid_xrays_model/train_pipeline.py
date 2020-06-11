@@ -111,7 +111,12 @@ class FocalLoss(nn.Module):
 
 
 if __name__ == '__main__':
-   run_training_sample(sample_size=600, image_size=420, n_cycles=10)
+   run_training_sample(sample_size=config.BEST_MODEL_PARAMS['sample_size'],
+                       image_size=config.BEST_MODEL_PARAMS['image_size'],
+                       n_cycles=config.BEST_MODEL_PARAMS['n_cycles'],
+                       with_oversampling=config.BEST_MODEL_PARAMS['with_oversampling'],
+                       with_focal_loss=config.BEST_MODEL_PARAMS['with_focal_loss'])
+
    # plot_learning_rate(sample_size=600, image_size=420)
    # improve_saved_model(sample_size=600, image_size=420, n_cycles=5, max_lr=slice(1e-6,1e-4), save=False)
 

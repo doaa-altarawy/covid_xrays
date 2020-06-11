@@ -10,6 +10,8 @@ import pathlib
 import numpy as np
 from sklearn.model_selection import train_test_split
 from fastai.vision import load_learner, Learner, ImageDataBunch, get_transforms, imagenet_stats
+import fastai
+import torch
 
 
 logger = logging.getLogger(__name__)
@@ -81,14 +83,25 @@ def _get_postfix(with_focal_loss=False,
 
     return postfix
 
-def load_saved_learner(with_focal_loss=False,
-                       with_oversampling=False, sample_size=None):
+
+def load_saved_learner(with_focal_loss=False, with_oversampling=False,
+                       sample_size=None, cpu=True):
 
     postfix = _get_postfix(with_focal_loss, with_oversampling, sample_size)
 
     save_file_name = f'{config.PIPELINE_SAVE_FILE}{_version}{postfix}.pkl'
+
+    if cpu:  # map from gpu to
+        fastai.torch_core.defaults.device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
+
     learn = load_learner(config.TRAINED_MODEL_DIR, save_file_name)
-    learn.layer_groups = joblib.load(filename=f'{config.TRAINED_MODEL_DIR}/{save_file_name}_layer_groups')
+    # layers_file = f'{config.TRAINED_MODEL_DIR}/{save_file_name}_layer_groups'
+    # if fastai.torch_core.defaults.device == torch.device('cpu'):
+    #     learn.layer_groups = torch.load(layers_file, map_location=torch.device('cpu'))
+    # else:
+    #     learn.layer_groups = torch.load(layers_file)
+
+    # learn.layer_groups = joblib.load(filename=f'{config.TRAINED_MODEL_DIR}/{save_file_name}_layer_groups')
 
     return learn
 
@@ -152,3 +165,6 @@ def save_data(*, X, y, file_name : str, max_rows=-1):
         tmp.iloc[:max_rows].to_csv(save_path, index=False)
     else:
         tmp.to_csv(save_path, index=False)
+
+if __name__ == "__main__":
+    learn = load_saved_learner(with_focal_loss=False, with_oversampling=True, sample_size=5000)
