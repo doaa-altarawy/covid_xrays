@@ -8,15 +8,26 @@ SEED = 0
 PACKAGE_ROOT = pathlib.Path(covid_xrays_model.__file__).resolve().parent
 TRAINED_MODEL_DIR = PACKAGE_ROOT / 'trained_models'
 
-# data
+BEST_MODEL_PARAMS = {
+    'sample_size': 600,  # 5000
+    'image_size': 420,
+    'n_cycles': 10,
+    'with_focal_loss': False,
+    'with_oversampling': True
+}
+
+
 TESTING_DATA_FILE = 'test_data.csv'  # for pytest
 
 PIPELINE_NAME = 'covid_xrays_model'
 PIPELINE_SAVE_FILE = f'{PIPELINE_NAME}_output_v'
 
-DATA_DIR = pathlib.Path(os.environ.get('DATA_DIR') or PACKAGE_ROOT / 'data')
+DATA_DIR = pathlib.Path(os.environ.get('DATA_DIR') or PACKAGE_ROOT.parents[1] / 'data')
 RAW_DATA_DIR = DATA_DIR / 'raw'
 PROCESSED_DATA_DIR = DATA_DIR / 'processed'
+
+
+# -------------------------  datasets --------------------------
 
 TRAIN_FILE = PROCESSED_DATA_DIR / 'train_split_v3.txt'
 TEST_FILE = PROCESSED_DATA_DIR / 'test_split_v3.txt'
@@ -46,15 +57,6 @@ rsna_csvname = RAW_DATA_DIR / rsna_datapath / 'stage_2_detailed_class_info.csv'
 # found that images that aren't pneunmonia and also not normal are classified as 0s
 rsna_csvname2 = RAW_DATA_DIR / rsna_datapath / 'stage_2_train_labels.csv'
 rsna_imgpath = RAW_DATA_DIR / rsna_datapath / 'stage_2_train_images'
-
-
-BEST_MODEL_PARAMS = {
-    'nn_model__batch_size': 8,
-    'nn_model__dropout': 0.01,
-    'nn_model__epochs': 50,
-    'nn_model__learning_rate': 0.0001,
-    'nn_model__nodes_per_layer': (10, 10, 7, 5),
-    'nn_model__optimizer': 'adam'}
 
 
 # For differential testing
