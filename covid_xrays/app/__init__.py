@@ -3,7 +3,6 @@ from flask_bootstrap import Bootstrap
 from flask_mail import Mail
 from flask_login import LoginManager
 from flask_moment import Moment
-from flask_pagedown import PageDown
 from config import config
 from flask_caching import Cache
 from flask_cors import CORS
@@ -20,7 +19,6 @@ app_admin = Admin(name='COVID X-rays Admin', template_mode='bootstrap3',
 
 bootstrap = Bootstrap()
 mail = Mail()
-pagedown = PageDown()
 moment = Moment()  # formatting dates and time
 cache = Cache()
 cors = CORS()
@@ -42,7 +40,6 @@ def create_app(config_name):
     if app.config['DB_LOGGING']:
         db.init_app(app)
     login_manager.init_app(app)
-    pagedown.init_app(app)
     cache.init_app(app)
     cors.init_app(app)
 

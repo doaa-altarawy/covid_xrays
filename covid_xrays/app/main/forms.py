@@ -3,7 +3,6 @@ from wtforms import StringField, TextAreaField, BooleanField, SelectField,\
     SubmitField, MultipleFileField
 from wtforms.validators import DataRequired, Length, Email, Regexp
 from wtforms import ValidationError
-# from flask_pagedown.fields import PageDownField
 from flask_wtf.file import FileAllowed, FileRequired, FileField
 
 
