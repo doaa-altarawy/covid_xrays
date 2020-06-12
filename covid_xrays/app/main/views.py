@@ -9,6 +9,7 @@ import logging
 from .forms import UploadForm
 import os
 from covid_xrays_model.predict import make_prediction_sample
+from time import time
 
 logger = logging.getLogger(__name__)
 
@@ -29,7 +30,7 @@ def server_shutdown():
     return 'Shutting down...'
 
 
-@main.route('/')
+@main.route('/list')
 def index():
     apps = [
         {'name': 'COIVD19 screening from X-rays', 'link': '/covid_form/'},
@@ -38,7 +39,7 @@ def index():
     return render_template('index.html', apps=apps)
 
 
-@main.route('/covid_form/', methods=['GET', 'POST'])
+@main.route('/', methods=['GET', 'POST'])
 def covid_upload_form():
     form = UploadForm()
 
@@ -49,15 +50,19 @@ def covid_upload_form():
         file = form.data_file.data
         filename = secure_filename(file.filename)
         full_path = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
+        # Add timestamp to filename
+        full_path = ".".join(full_path.split('.')[:-1]) + str(time()) + '.' + full_path.split('.')[-1]
+
+        # add a random # to save name
         file.save(full_path)
 
         cat, prob = make_prediction_sample(full_path)
 
-        print('---------------------', cat, prob)
+        logger.info(f'---------------------Cat: {cat}, {prob}')
 
         # flash(f'Probability of having COVID19 is {prob["COVID-19"]:0.5f}')
 
-        msg = f'Probability of having COVID19 is {prob["COVID-19"]:0.5f}'
+        msg = f'Probability of having COVID19 is {prob["COVID-19"]:0.3f}'
 
         return render_template('covid/thank_you.html', data=msg, filename=filename)
 
