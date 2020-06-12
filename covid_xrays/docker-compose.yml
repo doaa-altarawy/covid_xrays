@@ -1,0 +1,75 @@
+version: "3.7"
+
+# Note: YAML boolean values (true, false, yes, no, on, off) must be
+#  enclosed in quotes, so that the parser interprets them as strings.
+
+services:
+
+  flask:
+    # don't specify names if you will do scaling/replicas
+    container_name: covid_xrays_flask
+    build: .
+#    env_file: .env
+    restart: unless-stopped
+    environment:
+      # set by a .env file (add to production)
+      - FLASK_CONFIG=production
+#      - MONGO_URI=$MONGO_URI
+      - MONGO_URI=mongodb://covid_user:covid_pass@mongo_service:27017/covid_apis_db
+    volumes:
+      - ./docker_data/app-data:/var/www/logs
+#    depends_on:
+#      - mongo_service
+    networks:
+      - frontend
+      - backend
+
+
+#  mongo_service:
+#    container_name: covid_xrays_mongo_service
+#    image: mongo:4.2
+#    restart: unless-stopped
+#    command: mongod --auth
+##    env_file:
+##      - .dbpass
+#    environment:
+#      MONGO_INITDB_DATABASE: covid_apis_db
+#      MONGO_INITDB_ROOT_USERNAME: root
+#      MONGO_INITDB_ROOT_PASSWORD: mypass
+#      MONGODB_DATA_DIR: /data/db
+#      MONDODB_LOG_DIR: /dev/null
+#    volumes:
+#      - ./docker_data/mongodb-data:/data/db
+#      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+#    networks:
+#      - backend
+
+  webserver:
+    container_name: covid_xrays_webserver
+    build:
+      context: nginx
+      dockerfile: Dockerfile
+    image: webserver:latest
+    restart: always
+    environment:
+      APP_ENV: "prod"
+      APP_NAME: "webserver"
+      APP_DEBUG: "true"
+      SERVICE_NAME: "webserver"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./docker_data/nginx-data:/var/log/nginx
+    depends_on:
+      - flask
+    networks:
+      - frontend
+
+networks:
+  frontend:
+      driver: bridge
+  backend:
+      driver: bridge
+
+

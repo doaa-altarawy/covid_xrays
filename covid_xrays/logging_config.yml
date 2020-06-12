@@ -1,0 +1,39 @@
+version: 1
+
+disable_existing_loggers: False
+
+formatters:
+  hiformat:
+    datefmt: "%m/%d/%Y %I:%M:%S %p"
+    format: "[%(asctime)s] — %(levelname)s: %(name)s:%(funcName)s:%(lineno)d —— %(message)s"
+  simple:
+    datefmt: "%m/%d/%Y %I:%M:%S %p"
+    format: '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+
+handlers:
+  console:
+    class: logging.StreamHandler
+    level: DEBUG
+    formatter: hiformat
+    stream: ext://sys.stdout
+  rotating_file:
+    class: logging.handlers.RotatingFileHandler
+    level: DEBUG
+    formatter: hiformat
+    filename: logs/covid_xrays.log
+    maxBytes: 5000000
+
+loggers:
+  console:
+    level: INFO
+    handlers: [console, rotating_file]
+    propagate: no
+
+  app: # Set logging of anything under app/
+    level: DEBUG
+    handlers: [console, rotating_file]
+    propagate: no
+
+#root: # for all other loggers, libraries, ..
+#  level: ERROR
+#  handlers: [console, rotating_file]
