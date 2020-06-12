@@ -2,9 +2,7 @@ import pandas as pd
 import numpy as np
 from covid_xrays_model.config import config
 from covid_xrays_model.processing.data_management import load_saved_learner
-from covid_xrays_model.metrics import mape, percentile_rel_90
 import logging
-from typing import Union, List
 from fastai.vision import open_image
 
 logger = logging.getLogger(__name__)

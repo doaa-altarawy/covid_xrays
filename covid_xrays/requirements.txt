@@ -1,3 +1,4 @@
+pip==20.0.2
 flask>=1.1.0
 flask_bootstrap
 flask_mail
@@ -26,5 +27,5 @@ geoip2
 gunicorn
 
 # ML model library
-#covid_xrays_model @ git+https://github.com/doaa-altarawy/covid_xrays.git#egg=covid_xrays&subdirectory=covid_xrays_model
+covid_xrays_model @ git+https://github.com/doaa-altarawy/covid_xrays.git#egg=covid_xrays&subdirectory=covid_xrays_model
 
