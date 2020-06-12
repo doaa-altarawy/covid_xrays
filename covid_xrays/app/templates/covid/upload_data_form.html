@@ -35,9 +35,11 @@
 
             {{ form.hidden_tag() }}
             {{ wtf.form_errors(form, hiddens="only") }}
+
+
 {#            {{ form.csrf_token() }}#}
 
-            {{ wtf.quick_form(form, button_map={'submit': 'primary'}) }}
+            {{ wtf.quick_form(form, button_map={'submit': 'btn btn-primary pull-xs-right tm-button tm-button-normal my-4'}) }}
 
 {#            <p>#}
 {#                {{ wtf.form_field(form.name) }}<br>#}
