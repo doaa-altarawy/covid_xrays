@@ -1,0 +1,47 @@
+{% extends 'admin/base.html' %}
+
+{% block head %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-select.min.css' ) }}" type="text/css"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom_admin.css' ) }}" type="text/css"/>
+{% endblock %}
+
+
+{% block access_control %}
+    <ul class="nav navbar-nav navbar-right">
+        {% if current_user.can(Permission.MODERATE) %}
+        {% endif %}
+        {% if current_user.is_authenticated %}
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                <img src="{{ current_user.gravatar(size=18) }}">
+                Account <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+                <li><a href="{{ url_for('auth.change_password') }}">Change Password</a></li>
+                <li><a href="{{ url_for('auth.change_email_request') }}">Change Email</a></li>
+                <li><a href="{{ url_for('auth.logout') }}">Log Out</a></li>
+            </ul>
+        </li>
+        {% else %}
+        <li><a href="{{ url_for('auth.login') }}">Log In</a></li>
+        {% endif %}
+    </ul>
+{% endblock %}
+
+
+
+{% block tail %}
+    {{ super() }}
+    <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap-select.min.js' ) }}"></script>
+
+    <script type="text/javascript">
+        jQuery(document).ready(function(){
+            $('select[multiple]').selectpicker({
+                'liveSearch': true,
+                'actionsBox': true,
+                'size': 7
+            });
+        });
+    </script>
+{% endblock %}
