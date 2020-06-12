@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% import "_macros.html" as macros %}
+
+{% block title %}COVID X-rays{% endblock %}
+
+{% block page_content %}
+
+    <div>
+        <iframe src="/reaction_viewer/" width="100%" height="2000px" frameborder="0"></iframe>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+{{ pagedown.include_pagedown() }}
+{% endblock %}
