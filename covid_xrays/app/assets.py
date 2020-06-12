@@ -9,14 +9,20 @@ def compile_assets(app):
 
     bundles = {}
 
-    bundles['js_base'] = Bundle('src/js/main.js',  # add all site wide JS files
+    bundles['js_base'] = Bundle('src/js/*.js',  # add all site wide JS files
                        filters='jsmin',
                        output='dist/js/main.min.js')
 
-    bundles['css_base'] = Bundle('src/scss/ml_datasets/ml_datasets_bootstrap4.scss',
+    bundles['css_base'] = Bundle('src/scss/*.css',
                          depends='**/*.scss',
                          filters='libsass',
-                         output='dist/css/ml_datasets_bootstrap4.css')
+                         output='dist/css/pipeline_theme.css')
+
+
+    # bundles['css_base'] = Bundle('src/scss/ml_datasets/ml_datasets_bootstrap4.scss',
+    #                      depends='**/*.scss',
+    #                      filters='libsass',
+    #                      output='dist/css/ml_datasets_bootstrap4.css')
 
 
     # to run less files directly from the browser

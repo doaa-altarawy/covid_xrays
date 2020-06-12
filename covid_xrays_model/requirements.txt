@@ -12,12 +12,12 @@ xlrd>=1.0.0
 # pip, or conda-forge
 python-dotenv
 
-opencv-python
+#opencv-python
 #pydicom
 
 #Pillow is a popular Python imaging library that can handle the decompression of
 #some JPEG and JPEG2000 images. -- >easier than GDCM
-pillow
+#pillow
 # or
 #conda install -c conda-forge openjpeg jpeg
 

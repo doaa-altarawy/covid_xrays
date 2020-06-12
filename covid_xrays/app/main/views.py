@@ -39,7 +39,7 @@ def index():
 
 
 @main.route('/covid_form/', methods=['GET', 'POST'])
-def app_in_iframe():
+def covid_upload_form():
     form = UploadForm()
 
     save_access(page='covid_form', access_type='homepage')
@@ -55,11 +55,11 @@ def app_in_iframe():
 
         print('---------------------', cat, prob)
 
-        # flash(f'Probaility of having COVID19 is {prob["COVID-19"]:0.5f}')
+        # flash(f'Probability of having COVID19 is {prob["COVID-19"]:0.5f}')
 
-        msg = f'Probaility of having COVID19 is {prob["COVID-19"]:0.5f}'
+        msg = f'Probability of having COVID19 is {prob["COVID-19"]:0.5f}'
 
-        return render_template('covid/thank_you.html', data=msg)
+        return render_template('covid/thank_you.html', data=msg, filename=filename)
 
     # return the empty form
     return render_template('covid/upload_data_form.html', form=form)
@@ -77,3 +77,7 @@ def log_download(access_type):
                 dataset_name=ds_name, download_type=ds_type)
 
     return {'success': True}
+
+@main.route('/uploads/<path:filename>')
+def send_file(filename):
+    return send_from_directory(current_app.config['UPLOAD_FOLDER'], filename)

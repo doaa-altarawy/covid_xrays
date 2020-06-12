@@ -9,11 +9,12 @@ from flask_wtf.file import FileAllowed, FileRequired, FileField
 
 
 class UploadForm(FlaskForm):
-    name = StringField('Name', validators=[DataRequired()])
+    name = StringField('Provider Name', validators=[DataRequired()])
+    title = StringField('Title')
     email = StringField('Email', validators=[DataRequired(), Email()])
     # validated = BooleanField('Validated Data')
     comments = TextAreaField("Comments")
-    language = SelectField('More choices', choices = [('cpp', 'c1'), ('py', 'c2')])
+    # language = SelectField('More choices', choices = [('cpp', 'c1'), ('py', 'c2')])
 
     data_file = FileField('X-ray image File', validators=[
                                     FileRequired(),
@@ -21,4 +22,4 @@ class UploadForm(FlaskForm):
                                                 'Only jpeg, jpg, png, or bmp images are allowed!')
                 ])
 
-    submit = SubmitField('Get Recommendation')
+    submit = SubmitField('Get Recommendation', render_kw={'class': 'btn btn-primary pull-xs-right tm-button tm-button-normal'})

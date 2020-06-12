@@ -16,15 +16,29 @@
 
 {% block page_content %}
 
-    <div class="mb-5">
-        <div class="row justify-content-center my-5">
 
-            <h3 class="text-center my-auto">COVID Screeing</h3>
+     <div class="tm-flex">
+        <div class="tm-purple-bg tm-box-pad tm-bordered-box tm-no-border-top">
+            <h2 class="tm-section-title">Recommendation for COVID-19 testing</h2>
+
+             <p>{{ data }}</p>
         </div>
 
-      <h3 class="warning">{{ data }}</h3>
+        <div class="tm-gray-bg tm-box-pad tm-bordered-box tm-no-border-top">
+            <h2 class="tm-section-title">Uploaded image</h2>
 
+<!--             <img src="{{ url_for('main.send_file', filename=filename) }}" class="img-fluid tm-services-img">-->
+             <img src="{{ url_for('static', filename='img/test.jpg') }}" class="img-fluid tm-services-img">
+
+        </div>
     </div>
+
+    <div class="tm-content-box">
+         <div class="tm-flex">
+            <a href="{{ url_for('main.covid_upload_form') }}" class="btn pull-xs-right tm-button tm-button-normal">Back</a>
+         </div>
+    </div>
+
 
 
 
