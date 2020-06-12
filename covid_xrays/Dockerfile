@@ -13,6 +13,7 @@ ADD ./requirements.txt /var/www/requirements.txt
 # what's only needed for continuumio/miniconda3
 RUN apt-get update && \
     pip install --upgrade pip setuptools wheel && \
+    conda install bottleneck && \
     apt-get install -y --no-install-recommends npm && \
     rm -rf /var/lib/apt/lists/*  && \
     # Python
