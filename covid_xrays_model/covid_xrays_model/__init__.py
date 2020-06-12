@@ -1,6 +1,3 @@
-import tensorflow as tf
-tf.get_logger().setLevel('WARN')
-
 import logging
 import os
 from covid_xrays_model.config import config

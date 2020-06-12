@@ -3,16 +3,17 @@ pip==20.0.2
 pandas
 scikit-learn
 matplotlib
-seaborn
-jupyter
-keras
-tensorflow
+#seaborn
+#jupyter
+#keras
+#tensorflow
 xlrd>=1.0.0
 
 # pip, or conda-forge
 python-dotenv
+
 opencv-python
-pydicom
+#pydicom
 
 #Pillow is a popular Python imaging library that can handle the decompression of
 #some JPEG and JPEG2000 images. -- >easier than GDCM
@@ -25,26 +26,15 @@ pillow
 #JPEG, JPEG-LS and JPEG2000 images.
 #conda install gdcm -c conda-forge
 
-
-
 # packaging
-setuptools==41.0.0
-wheel==0.32.3
+setuptools
+wheel
 click
 
 
-# # production requirements
-# numpy>=1.18.1
-# pandas>=1.0.3
-# scikit-learn==0.21.3
-# keras== 2.3.1  # has error with Flask threads
-# # keras==2.2.5
-# # keras @ git+https://github.com/keras-team/keras.git@master#egg=keras
-# tensorflow==2.1.0
-#
 # # plotly
 #
-# # testing requirements
+# testing requirements
 pytest>=4.6.6
 
 torch==1.4
