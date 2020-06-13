@@ -31,7 +31,7 @@ class Config:
     # log page access to db or not
     DB_LOGGING = False
 
-    UPLOAD_FOLDER = 'uploads'
+    UPLOAD_FOLDER = basedir + '/uploads'
 
     MONGODB_SETTINGS = {
         'host': os.environ.get('MONGO_URI',

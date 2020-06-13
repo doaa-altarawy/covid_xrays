@@ -49,10 +49,13 @@ def covid_upload_form():
     # if form data is valid, go to success
     if form.validate_on_submit():
         file = form.data_file.data
+
+        # very important to avoid hacking, removes, ../../ from filenames
         filename = secure_filename(file.filename)
-        full_path = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
         # Add timestamp to filename
-        full_path = ".".join(full_path.split('.')[:-1]) + str(time()) + '.' + full_path.split('.')[-1]
+        filename = ".".join(filename.split('.')[:-1]) + str(time()) + '.' + filename.split('.')[-1]
+
+        full_path = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
 
         # Create upload folder if doesn't exist
         if not Path(current_app.config['UPLOAD_FOLDER']).exists():
@@ -64,11 +67,14 @@ def covid_upload_form():
 
         logger.info(f'---------------------Cat: {cat}, {prob}')
 
-        # flash(f'Probability of having COVID19 is {prob["COVID-19"]:0.5f}')
+        covid_prob = f'{prob["COVID-19"]:0.3f}%'
+        suggested = ''
+        if cat != 'COVID-19':
+            suggested = f'is {cat}' if cat == 'normal' else f'has {cat} '
+            suggested += f' (with {100*prob[cat]:0.2f}% confidence)'
 
-        msg = f'Probability of having COVID19 is {prob["COVID-19"]:0.3f}'
-
-        return render_template('covid/thank_you.html', data=msg, filename=filename)
+        return render_template('covid/thank_you.html', covid_prob=covid_prob,
+                               suggested=suggested, filename=filename)
 
     # return the empty form
     return render_template('covid/upload_data_form.html', form=form)

@@ -24,40 +24,26 @@
     </div>
 
     <!------------------ Upload data form --------------------->
-<!--    <div class="container">-->
 
-        <div class="tm-flex">
-            <div class="tm-contact-left-half tm-gray-bg">
-                <div class="tm-contact-inner-pad">
-                    <h2 class="tm-section-title">Upload data</h2>
+    <div class="tm-flex">
+        <div class="tm-contact-left-half tm-gray-bg">
+            <div class="tm-contact-inner-pad">
+                  <h2 class="tm-section-title">Upload data</h2>
 
-          <form class="form form-horizontal" method="post" role="form" novalidate enctype="multipart/form-data">
+                  <form class="form form-horizontal" method="post" role="form" novalidate enctype="multipart/form-data">
 
-            {{ form.hidden_tag() }}
-            {{ wtf.form_errors(form, hiddens="only") }}
+                    {{ form.hidden_tag() }}
+                    {{ wtf.form_errors(form, hiddens="only") }}
 
+                    {#  {{ form.csrf_token() }}#}
 
-{#            {{ form.csrf_token() }}#}
+                    {{ wtf.quick_form(form, button_map={'submit': 'btn pull-xs-right tm-button tm-button-normal my-4'}) }}
 
-            {{ wtf.quick_form(form, button_map={'submit': 'btn btn-primary pull-xs-right tm-button tm-button-normal my-4'}) }}
-
-{#            <p>#}
-{#                {{ wtf.form_field(form.name) }}<br>#}
-{##}
-{#            </p>#}
-{#            <p>#}
-{#                {{ form.email.label }}<br>#}
-{#                {{ form.email(size=50) }}#}
-{#            </p>#}
-{#            <p>{{ form.validat() }} {{ form.remember_me.label }}</p>#}
-{##}
-{#            <p>{{ form.submit() }}</p>#}
-        </form>
-                </div>
+                </form>
             </div>
         </div>
+    </div>
 
-<!--    </div>-->
 
 
     <div id="dialog-message" title="COVID">

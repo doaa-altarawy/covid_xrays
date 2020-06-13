@@ -21,14 +21,18 @@
         <div class="tm-purple-bg tm-box-pad tm-bordered-box tm-no-border-top">
             <h2 class="tm-section-title">Recommendation for COVID-19 testing</h2>
 
-             <p>{{ data }}</p>
+             <p>Probability of having COVID-19 is {{ covid_prob }}</p>
+            {% if suggested %}
+             <p>Suggested: patient {{ suggested }} </p>
+            {% endif %}
+
         </div>
 
         <div class="tm-gray-bg tm-box-pad tm-bordered-box tm-no-border-top">
             <h2 class="tm-section-title">Uploaded image</h2>
 
 <!--             <img src="{{ url_for('main.send_file', filename=filename) }}" class="img-fluid tm-services-img">-->
-             <img src="{{ url_for('static', filename='img/test.jpg') }}" class="img-fluid tm-services-img">
+             <img src="{{ url_for('main.send_file', filename=filename) }}" class="img-fluid tm-services-img">
 
         </div>
     </div>
