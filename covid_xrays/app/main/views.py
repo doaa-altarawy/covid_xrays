@@ -8,6 +8,7 @@ from ..models import save_access
 import logging
 from .forms import UploadForm
 import os
+from pathlib import Path
 from covid_xrays_model.predict import make_prediction_sample
 from time import time
 
@@ -53,7 +54,10 @@ def covid_upload_form():
         # Add timestamp to filename
         full_path = ".".join(full_path.split('.')[:-1]) + str(time()) + '.' + full_path.split('.')[-1]
 
-        # add a random # to save name
+        # Create upload folder if doesn't exist
+        if not Path(current_app.config['UPLOAD_FOLDER']).exists():
+            Path(current_app.config['UPLOAD_FOLDER']).mkdir(parents=True, exist_ok=True)
+
         file.save(full_path)
 
         cat, prob = make_prediction_sample(full_path)
