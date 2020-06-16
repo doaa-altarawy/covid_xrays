@@ -9,7 +9,7 @@ PACKAGE_ROOT = pathlib.Path(covid_xrays_model.__file__).resolve().parent
 TRAINED_MODEL_DIR = PACKAGE_ROOT / 'trained_models'
 
 BEST_MODEL_PARAMS = {
-    'sample_size': 600,  # 5000
+    'sample_size': 5000,
     'image_size': 420,
     'n_cycles': 10,
     'with_focal_loss': False,
