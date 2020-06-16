@@ -67,7 +67,7 @@ def covid_upload_form():
 
         logger.info(f'---------------------Cat: {cat}, {prob}')
 
-        covid_prob = f'{prob["COVID-19"]:0.3f}%'
+        covid_prob = f'{100*prob["COVID-19"]:0.3f}%'
         suggested = ''
         if cat != 'COVID-19':
             suggested = f'is {cat}' if cat == 'normal' else f'has {cat} '
