@@ -32,11 +32,7 @@ def load_dataset(*, sample_size=600, image_size=420) -> ImageDataBunch:
     subset = pd.DataFrame(selected, columns=labels.columns)
     subset[['name', 'label']].to_csv(config.PROCESSED_DATA_DIR / 'labels.csv', index=False)
 
-    tfms = get_transforms(do_flip=False,
-                          max_lighting=0.1,
-                          max_zoom=1.05,
-                          max_warp=0.
-                         )
+    tfms = _get_image_transformation()
 
 
     # will read from "labels.csv" in the data directory
@@ -48,6 +44,15 @@ def load_dataset(*, sample_size=600, image_size=420) -> ImageDataBunch:
     data.normalize(imagenet_stats)
 
     return data
+
+
+def _get_image_transformation():
+
+    return get_transforms(do_flip=False,
+                          max_lighting=0.1,
+                          max_zoom=1.05,
+                          max_warp=0.
+                         )
 
 
 def get_train_test_split(data: pd.DataFrame, test_size=config.TEST_SIZE, train_size=None):
