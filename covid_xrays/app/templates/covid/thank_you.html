@@ -19,12 +19,12 @@
 
      <div class="tm-flex">
         <div class="tm-purple-bg tm-box-pad tm-bordered-box tm-no-border-top">
-            <h2 class="tm-section-title">Recommendation for COVID-19 testing</h2>
+            <h1 class="tm-section-title">Recommendation:</h1>
 
-             <p>Probability of having COVID-19 is {{ covid_prob }}</p>
-            {% if suggested %}
-             <p>Suggested: patient {{ suggested }} </p>
-            {% endif %}
+             <h4 class="pb-4">Probability of having COVID-19 is {{ covid_prob }}</h4>
+             {% for msg in suggested %}
+                <h5> {{ msg }} </h5>
+             {% endfor %}
 
         </div>
 

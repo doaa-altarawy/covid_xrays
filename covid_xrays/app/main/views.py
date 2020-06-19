@@ -67,11 +67,16 @@ def covid_upload_form():
 
         logger.info(f'---------------------Cat: {cat}, {prob}')
 
-        covid_prob = f'{100*prob["COVID-19"]:0.3f}%'
-        suggested = ''
+        covid_prob = f'{100*prob["COVID-19"]:0.2f}%'
+        suggested = []
         if cat != 'COVID-19':
-            suggested = f'is {cat}' if cat == 'normal' else f'has {cat} '
-            suggested += f' (with {100*prob[cat]:0.2f}% confidence)'
+            msg = 'Suggested: patient '
+            msg += f'is {cat}' if cat == 'normal' else f'has {cat} '
+            msg += f' ({100*prob[cat]:0.2f}% confidence). '
+            suggested.append(msg)
+            suggested.append(f'No more COVID-19 testing is recommended.')
+        else:
+            suggested.append(f'Patient is recommended for COVID-19 testing.')
 
         return render_template('covid/thank_you.html', covid_prob=covid_prob,
                                suggested=suggested, filename=filename)

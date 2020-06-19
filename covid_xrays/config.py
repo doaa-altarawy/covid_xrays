@@ -8,7 +8,7 @@ class Config:
     # In dev, default to use memory cache
     CACHE_TYPE = os.environ.get('CACHE_TYPE') or 'simple'
     CACHE_DEFAULT_TIMEOUT = 60 * 60 * 24  # in seconds, one day
-
+    WTF_CSRF_TIME_LIMIT = 60 * 60 *24
 
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'hard to guess string'
 
