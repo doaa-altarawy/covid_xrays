@@ -9,11 +9,12 @@ logger = logging.getLogger(__name__)
 
 
 
-def make_prediction_sample(image_path):
+def make_prediction_sample(image_path, cpu=True):
 
     learn = load_saved_learner(sample_size=config.BEST_MODEL_PARAMS['sample_size'],
                                with_oversampling=config.BEST_MODEL_PARAMS['with_oversampling'],
-                               with_focal_loss=config.BEST_MODEL_PARAMS['with_focal_loss'])
+                               with_focal_loss=config.BEST_MODEL_PARAMS['with_focal_loss'],
+                               cpu=cpu)
 
     image = open_image(image_path)
     cat = learn.predict(image)
