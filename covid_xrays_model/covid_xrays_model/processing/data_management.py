@@ -99,6 +99,8 @@ def load_saved_learner(with_focal_loss=False, with_oversampling=False,
     if cpu:  # map from gpu to
         fastai.torch_core.defaults.device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
 
+    logger.info(f"Loading model with device: {fastai.torch_core.defaults.device}")
+
     learn = load_learner(config.TRAINED_MODEL_DIR, save_file_name)
     # layers_file = f'{config.TRAINED_MODEL_DIR}/{save_file_name}_layer_groups'
     # if fastai.torch_core.defaults.device == torch.device('cpu'):

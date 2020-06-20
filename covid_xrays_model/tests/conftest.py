@@ -27,8 +27,9 @@ def trained_model():
                            sample_size=params['sample_size'],
                            cpu=True)
         return True
-    except:
-        logging.info("Running training to generate the model for tests")
+    except Exception as err:
+        print(err)
+        print("Running training to generate the model for tests")
 
         run_training_sample(sample_size=params['sample_size'],
                             image_size=params['image_size'],
