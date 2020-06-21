@@ -23,7 +23,7 @@ def load_dataset(*, sample_size=600, image_size=420) -> ImageDataBunch:
     labels = pd.read_csv(config.PROCESSED_DATA_DIR / 'labels_full.csv')
 
     classes = ['pneumonia', 'normal', 'COVID-19']
-    ds_types = ['train', 'test']
+    ds_types = ['train']
     selected = []
     for c in classes:
         for t in ds_types:
@@ -39,7 +39,7 @@ def load_dataset(*, sample_size=600, image_size=420) -> ImageDataBunch:
     data = ImageDataBunch.from_csv(config.PROCESSED_DATA_DIR,
                                    ds_tfms=tfms,
                                    csv_labels=config.PROCESSED_DATA_DIR / 'labels.csv',
-                                   valid_pct=0.2,
+                                   valid_pct=0.1,
                                    seed=config.SEED,
                                    size=image_size,
                                    bs=21)
@@ -79,13 +79,15 @@ def get_train_test_split(data: pd.DataFrame, test_size=config.TEST_SIZE, train_s
 
 
 def _get_postfix(with_focal_loss=False,
-                 with_oversampling=False, sample_size=None):
+                 with_oversampling=False, sample_size=None, with_weighted_loss=False):
 
     postfix = ''
     if with_oversampling:
         postfix += '_oversampling'
     if with_focal_loss:
         postfix += '_focus_loss'
+    if with_weighted_loss:
+        postfix += '_weighted_loss'
     if sample_size:
         postfix += f'_{sample_size}'
 
@@ -93,9 +95,9 @@ def _get_postfix(with_focal_loss=False,
 
 
 def load_saved_learner(with_focal_loss=False, with_oversampling=False,
-                       sample_size=None, cpu=True):
+                       sample_size=None, cpu=True, with_weighted_loss=False):
 
-    postfix = _get_postfix(with_focal_loss, with_oversampling, sample_size)
+    postfix = _get_postfix(with_focal_loss, with_oversampling, sample_size, with_weighted_loss)
 
     save_file_name = f'{config.PIPELINE_SAVE_FILE}{_version}{postfix}.pkl'
 
@@ -121,9 +123,9 @@ def load_saved_learner(with_focal_loss=False, with_oversampling=False,
 
 
 def save_learner(learn: Learner, with_focal_loss=False,
-                 with_oversampling=False, sample_size=None):
+                 with_oversampling=False, sample_size=None, with_weighted_loss=False):
 
-    postfix = _get_postfix(with_focal_loss, with_oversampling, sample_size)
+    postfix = _get_postfix(with_focal_loss, with_oversampling, sample_size, with_weighted_loss)
 
     save_file_name = f'{config.PIPELINE_SAVE_FILE}{_version}{postfix}.pkl'
     save_path = config.TRAINED_MODEL_DIR / save_file_name

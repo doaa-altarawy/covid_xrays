@@ -13,7 +13,8 @@ BEST_MODEL_PARAMS = {
     'image_size': 420,
     'n_cycles': 10,
     'with_focal_loss': False,
-    'with_oversampling': True
+    'with_oversampling': True,
+    'with_weighted_loss': False,
 }
 
 

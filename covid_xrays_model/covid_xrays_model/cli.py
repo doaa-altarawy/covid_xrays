@@ -13,11 +13,13 @@ def main():
 @click.option('--n_cycles', default=10, help='Number of cycles (epochs) trough the whole data')
 @click.option('--focal_loss', is_flag=True, default=False, help='Use focal_loss function')
 @click.option('--oversampling', is_flag=True, default=False, help='Use oversampling')
-def run_training(sample_size, image_size, n_cycles, focal_loss, oversampling):
+@click.option('--weighted_loss', is_flag=True, default=False, help='Use weighted loss function')
+def run_training(sample_size, image_size, n_cycles, focal_loss, oversampling, weighted_loss):
 
     click.echo("Running model trainning...")
     run_training_sample(sample_size=sample_size, image_size=image_size, n_cycles=n_cycles,
-                        with_focal_loss=focal_loss, with_oversampling=oversampling)
+                        with_focal_loss=focal_loss, with_oversampling=oversampling,
+                        with_weighted_loss=weighted_loss)
 
 
 @main.command()

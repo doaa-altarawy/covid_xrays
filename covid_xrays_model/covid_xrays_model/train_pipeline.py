@@ -5,8 +5,10 @@ np.random.seed(config.SEED)
 from covid_xrays_model.processing.data_management import save_learner, \
     load_saved_learner, load_dataset
 import logging
-from torch import nn
+from torch import nn, tensor
+import torch
 import torch.nn.functional as F
+from torch.nn import CrossEntropyLoss
 from fastai.vision import models, cnn_learner, torch, accuracy, ClassificationInterpretation, \
                           Learner, partial
 from fastai.callbacks import OverSamplingCallback
@@ -16,7 +18,8 @@ logger = logging.getLogger(__name__)
 
 
 def run_training_sample(sample_size=300, image_size=420, n_cycles=10,
-                        with_focal_loss=True, with_oversampling=True):
+                        with_focal_loss=True, with_oversampling=True,
+                        with_weighted_loss=False):
 
     data = load_dataset(sample_size=sample_size, image_size=image_size)
 
@@ -32,7 +35,12 @@ def run_training_sample(sample_size=300, image_size=420, n_cycles=10,
     # handle unbalanced data with weight
     # ['COVID-19', 'normal', 'pneumonia']
     if with_focal_loss:
-        learn.loss_fn = FocalLoss()
+        learn.loss_func = FocalLoss()
+    elif with_weighted_loss:
+        classes = {c:1 for c in learn.data.classes}
+        classes['COVID-19'] = 2
+        learn.loss_func = CrossEntropyLoss(weight=tensor(list(classes.values()), dtype=torch.float),
+                                           reduction='mean')
 
     learn.fit_one_cycle(n_cycles)
 
@@ -40,7 +48,7 @@ def run_training_sample(sample_size=300, image_size=420, n_cycles=10,
     # learn.load('stage-50')
 
     save_learner(learn, with_focal_loss=with_focal_loss, with_oversampling=with_oversampling,
-                 sample_size=sample_size)
+                 sample_size=sample_size, with_weighted_loss=with_weighted_loss)
 
     _save_classification_interpert(learn)
 
