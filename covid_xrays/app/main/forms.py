@@ -17,8 +17,8 @@ class UploadForm(FlaskForm):
 
     data_file = FileField('X-ray image File', validators=[
                                     FileRequired(),
-                                    FileAllowed(['jpeg', 'jpg', 'png', 'bmp'],
-                                                'Only jpeg, jpg, png, or bmp images are allowed!')
+                                    # FileAllowed(['jpeg', 'jpg', 'png', 'bmp'],
+                                    #             'Only jpeg, jpg, png, or bmp images are allowed!')
                 ])
 
     submit = SubmitField('Get Recommendation', render_kw={'class': 'btn btn-primary pull-xs-right tm-button tm-button-normal'})
