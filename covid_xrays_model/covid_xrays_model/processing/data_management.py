@@ -1,12 +1,10 @@
 import pandas as pd
 import joblib
 from sklearn.pipeline import Pipeline
-import shutil
 from covid_xrays_model.config import config
 from covid_xrays_model import __version__ as _version
 import logging
 from typing import List
-import pathlib
 import numpy as np
 from sklearn.model_selection import train_test_split
 from fastai.vision import load_learner, Learner, ImageDataBunch, get_transforms, imagenet_stats
@@ -16,6 +14,8 @@ import torch
 
 logger = logging.getLogger(__name__)
 
+
+learner_cache = {}
 
 
 def load_dataset(*, sample_size=600, image_size=420) -> ImageDataBunch:
@@ -38,6 +38,9 @@ def load_dataset(*, sample_size=600, image_size=420) -> ImageDataBunch:
     # will read from "labels.csv" in the data directory
     data = ImageDataBunch.from_csv(config.PROCESSED_DATA_DIR,
                                    ds_tfms=tfms,
+                                   csv_labels=config.PROCESSED_DATA_DIR / 'labels.csv',
+                                   valid_pct=0.2,
+                                   seed=config.SEED,
                                    size=image_size,
                                    bs=21)
 
@@ -101,7 +104,11 @@ def load_saved_learner(with_focal_loss=False, with_oversampling=False,
 
     logger.info(f"Loading model with device: {fastai.torch_core.defaults.device}")
 
-    learn = load_learner(config.TRAINED_MODEL_DIR, save_file_name)
+    if save_file_name in learner_cache:
+        learn = learner_cache[save_file_name]
+    else:
+        learn = load_learner(config.TRAINED_MODEL_DIR, save_file_name)
+
     # layers_file = f'{config.TRAINED_MODEL_DIR}/{save_file_name}_layer_groups'
     # if fastai.torch_core.defaults.device == torch.device('cpu'):
     #     learn.layer_groups = torch.load(layers_file, map_location=torch.device('cpu'))
