@@ -53,9 +53,16 @@ def predict_dataset(ds_type: str='test'):
                                                 preds=pred_tesnor,
                                                 y_true=tensor(data.label_int.to_list())
                                                )
-    print(interp.confusion_matrix())
+    mat = interp.confusion_matrix()
+
+    # sum diagonal / all data_size *100
+    accuracy = np.trace(mat) / mat.sum() * 100
+
+    print(mat)
+    print(f'Accuracy: {accuracy}')
+
     interp.plot_confusion_matrix(return_fig=True).savefig(config.PROCESSED_DATA_DIR / 'confusion_matrix.png', dpi=200)
-    joblib.dump(interp.confusion_matrix(), config.PROCESSED_DATA_DIR / 'confusion_matrix.pkl')
+    joblib.dump(mat, config.PROCESSED_DATA_DIR / 'confusion_matrix.pkl')
 
 
 if __name__ == "__main__":
