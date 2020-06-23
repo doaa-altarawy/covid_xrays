@@ -12,6 +12,7 @@ from torch.nn import CrossEntropyLoss
 from fastai.vision import models, cnn_learner, torch, accuracy, ClassificationInterpretation, \
                           Learner, partial
 from fastai.callbacks import OverSamplingCallback
+import fastai
 
 
 logger = logging.getLogger(__name__)
@@ -38,8 +39,9 @@ def run_training_sample(sample_size=300, image_size=420, n_cycles=10,
         learn.loss_func = FocalLoss()
     elif with_weighted_loss:
         classes = {c:1 for c in learn.data.classes}
-        classes['COVID-19'] = 2
-        learn.loss_func = CrossEntropyLoss(weight=tensor(list(classes.values()), dtype=torch.float),
+        classes['COVID-19'] = 5
+        learn.loss_func = CrossEntropyLoss(weight=tensor(list(classes.values()),
+                                           dtype=torch.float, device=fastai.torch_core.defaults.device),
                                            reduction='mean')
 
     learn.fit_one_cycle(n_cycles)
