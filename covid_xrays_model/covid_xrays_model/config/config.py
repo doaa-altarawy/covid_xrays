@@ -14,7 +14,7 @@ BEST_MODEL_PARAMS = {
     'n_cycles': 10,
     'with_focal_loss': False,
     'with_oversampling': True,
-    'with_weighted_loss': False,
+    'with_weighted_loss': True,
 }
 
 
