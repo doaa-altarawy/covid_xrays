@@ -18,7 +18,8 @@ def make_prediction_sample(image_path, cpu=True):
                                with_weighted_loss=config.BEST_MODEL_PARAMS['with_weighted_loss'],
                                cpu=cpu)
 
-    image = open_image(image_path)
+    # load image in grayscale
+    image = open_image(image_path, convert_mode='L')
     cat = learn.predict(image)
     print(cat)
 
@@ -44,7 +45,8 @@ def predict_dataset(ds_type: str='test'):
 
     print(f'Running predictions on {data.shape[0]} data samples')
 
-    data['y_pred'] = data.name.apply(lambda x: learn.predict(open_image(config.PROCESSED_DATA_DIR / x)))
+    data['y_pred'] = data.name.apply(lambda x:
+                                     learn.predict(open_image(config.PROCESSED_DATA_DIR / x, convert_mode='L')))
     pred_tesnor = data.y_pred.apply(lambda x: x[2].tolist()).to_list()
     pred_tesnor = tensor(np.array(pred_tesnor))
 

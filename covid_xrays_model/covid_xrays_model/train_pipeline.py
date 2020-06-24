@@ -71,13 +71,14 @@ def plot_learning_rate(sample_size=300, image_size=420, load_learner=True):
 
 
 def improve_saved_model(sample_size=300, image_size=420, n_cycles=5,
-                        max_lr=slice(1e-6,1e-4), save=True,
-                        with_focal_loss=True, with_oversampling=True):
+                        max_lr=slice(1e-6,1e-4), save=False,
+                        with_focal_loss=False, with_oversampling=True,
+                        with_weighted_loss=True):
 
     data = load_dataset(sample_size=sample_size, image_size=image_size)
 
     learn = load_saved_learner(with_focal_loss=with_focal_loss, with_oversampling=with_oversampling,
-                               sample_size=sample_size)
+                               sample_size=sample_size, with_weighted_loss=with_weighted_loss)
     learn.data = data
 
     learn.unfreeze()
@@ -85,7 +86,7 @@ def improve_saved_model(sample_size=300, image_size=420, n_cycles=5,
 
     if save:
         save_learner(learn, with_focal_loss=with_focal_loss, with_oversampling=with_oversampling,
-                 sample_size=sample_size)
+                 sample_size=sample_size, with_weighted_loss=with_weighted_loss)
 
     _save_classification_interpert(learn)
 

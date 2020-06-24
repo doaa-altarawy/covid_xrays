@@ -42,6 +42,7 @@ def load_dataset(*, sample_size=600, image_size=420) -> ImageDataBunch:
                                    valid_pct=0.1,
                                    seed=config.SEED,
                                    size=image_size,
+                                   convert_mode='L',
                                    bs=21)
 
     data.normalize(imagenet_stats)
