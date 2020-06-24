@@ -39,12 +39,14 @@ def get_learning_rate(sample_size, image_size):
 @click.option('--save', is_flag=True, default=False, help='Save the new trained model, replacing the old one')
 @click.option('--focal_loss', is_flag=True, default=False, help='Use focal_loss function')
 @click.option('--oversampling', is_flag=True, default=False, help='Use oversampling')
-def improve_model(sample_size, image_size, n_cycles, max_lr, save, focal_loss, oversampling):
+@click.option('--weighted_loss', is_flag=True, default=False, help='Use weighted loss function')
+def improve_model(sample_size, image_size, n_cycles, max_lr, save, focal_loss, oversampling, weighted_loss):
 
     click.echo("Running improve model...")
     improve_saved_model(sample_size=sample_size, image_size=image_size, n_cycles=n_cycles,
                         max_lr=max_lr, save=save, with_focal_loss=focal_loss,
-                        with_oversampling=oversampling)
+                        with_oversampling=oversampling,
+                        with_weighted_loss=weighted_loss)
 
 
 if __name__ == "__main__":
