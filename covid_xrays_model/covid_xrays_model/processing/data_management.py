@@ -42,7 +42,6 @@ def load_dataset(*, sample_size=600, image_size=420) -> ImageDataBunch:
                                    valid_pct=0.1,
                                    seed=config.SEED,
                                    size=image_size,
-                                   convert_mode='L',
                                    bs=21)
 
     data.normalize(imagenet_stats)
@@ -105,7 +104,8 @@ def load_saved_learner(with_focal_loss=False, with_oversampling=False,
     if cpu:  # map from gpu to
         fastai.torch_core.defaults.device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
 
-    logger.info(f"Loading model with device: {fastai.torch_core.defaults.device}")
+    logger.info(f"Loading model from: {save_file_name}")
+    logger.info(f"Device: {fastai.torch_core.defaults.device}")
 
     if save_file_name in learner_cache:
         learn = learner_cache[save_file_name]
