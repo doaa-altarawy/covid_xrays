@@ -33,7 +33,7 @@ def run_training_sample(sample_size=300, image_size=420, n_cycles=10,
                         )
     learn.model = torch.nn.DataParallel(learn.model)
 
-    # handle unbalanced data with weight
+    # handle unbalanced data with weights
     # ['COVID-19', 'normal', 'pneumonia']
     if with_focal_loss:
         learn.loss_func = FocalLoss()
@@ -45,9 +45,6 @@ def run_training_sample(sample_size=300, image_size=420, n_cycles=10,
                                            reduction='mean')
 
     learn.fit_one_cycle(n_cycles)
-
-    # learn.save('stage-50')
-    # learn.load('stage-50')
 
     save_learner(learn, with_focal_loss=with_focal_loss, with_oversampling=with_oversampling,
                  sample_size=sample_size, with_weighted_loss=with_weighted_loss)

@@ -44,7 +44,7 @@ class LogView(ModelView):
 
     column_type_formatters = MY_DEFAULT_FORMATTERS
     column_exclude_list = []
-    column_filters = ['page', 'access_type', 'dataset_name']
+    column_filters = ['page', 'access_type', 'email']
 
     # Bug in Flask admin, don't use disabled: True
     # Bug in Flask admin, readonly doesn't work with boolean and ListFields
@@ -52,7 +52,10 @@ class LogView(ModelView):
         date={'readonly': True},
         page={'readonly': True},
         access_type={'readonly': True},
-        dataset_name={'readonly': True},
+        email={'readonly': True},
+        name={'readonly': True},
+        prediction={'readonly': True},
+        probabilities={'readonly': True},
         user_agent={'readonly': True},
         header_email={'readonly': True},
         city={'readonly': True},

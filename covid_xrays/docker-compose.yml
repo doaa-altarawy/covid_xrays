@@ -18,6 +18,7 @@ services:
       - MONGO_URI=mongodb://covid_user:covid_pass@mongo_service:27017/covid_apis_db
     volumes:
       - ./docker_data/app-data:/var/www/logs
+      - ./docker_data/uploads:/var/www/uploads
 #    depends_on:
 #      - mongo_service
     networks:

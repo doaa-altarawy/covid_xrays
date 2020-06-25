@@ -29,8 +29,13 @@ class Log(db.DynamicDocument):   # flexible schema, can have extra attributes
     page = db.StringField()
     access_type = db.StringField()
 
-    dataset_name = db.StringField()
-    download_type = db.StringField()
+    name = db.StringField()
+    title = db.StringField()
+    email = db.EmailField()
+    comments = db.StringField()
+    filename = db.StringField()
+    prediction = db.StringField()
+    probabilities = db.StringField()
 
     date = db.DateTimeField(default=datetime.datetime.utcnow)
 

@@ -44,8 +44,6 @@ def index():
 def covid_upload_form():
     form = UploadForm()
 
-    save_access(page='covid_form', access_type='homepage')
-
     # if form data is valid, go to success
     if form.validate_on_submit():
         file = form.data_file.data
@@ -78,25 +76,21 @@ def covid_upload_form():
         else:
             suggested.append(f'Patient is recommended for COVID-19 testing.')
 
+        save_access(page='covid_form', access_type='results_page',
+                    name=form.name.data, email=form.email.data,
+                    comments=form.comments.data, title=form.title.data,
+                    filename=filename,
+                    prediction=cat,
+                    probabilities=str(prob))
+
         return render_template('covid/thank_you.html', covid_prob=covid_prob,
                                suggested=suggested, filename=filename)
 
+
+    save_access(page='covid_form', access_type='upload_data_page')
     # return the empty form
     return render_template('covid/upload_data_form.html', form=form)
 
-
-
-@main.route('/log_access/<access_type>/')
-def log_download(access_type):
-
-    logger.info('log_access: '.format(request.args))
-    ds_name = request.args.get('dataset_name', None)
-    ds_type = request.args.get('download_type', None)
-
-    save_access(page='ml_datasets', access_type=access_type,
-                dataset_name=ds_name, download_type=ds_type)
-
-    return {'success': True}
 
 @main.route('/uploads/<path:filename>')
 def send_file(filename):

@@ -25,11 +25,11 @@ class Config:
     SSL_REDIRECT = False
 
     # Admin login
-    APP_ADMIN = os.environ.get('APP_ADMIN', 'daltarawy@gmail.com')
+    APP_ADMIN = os.environ.get('APP_ADMIN', 'doaa.altarawy@gmail.com')
     EMAIL_CONFIRMATION_ENABLED = False
 
     # log page access to db or not
-    DB_LOGGING = False
+    DB_LOGGING = os.environ.get('DB_LOGGING', False)
 
     UPLOAD_FOLDER = basedir + '/uploads'
 
