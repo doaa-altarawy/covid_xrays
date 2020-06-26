@@ -15,7 +15,7 @@ services:
       # set by a .env file (add to production)
       - FLASK_CONFIG=production
 #      - MONGO_URI=$MONGO_URI
-      - MONGO_URI=mongodb://covid_user:covid_pass@mongo_service:27017/covid_apis_db
+      #- MONGO_URI=mongodb://covid_user:covid_pass@mongo_service:27017/covid_apis_db
     volumes:
       - ./docker_data/app-data:/var/www/logs
       - ./docker_data/uploads:/var/www/uploads
