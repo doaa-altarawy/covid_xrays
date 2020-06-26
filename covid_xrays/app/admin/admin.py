@@ -43,8 +43,9 @@ class LogView(ModelView):
     can_view_details = True
 
     column_type_formatters = MY_DEFAULT_FORMATTERS
-    column_exclude_list = []
-    column_filters = ['page', 'access_type', 'email']
+    column_exclude_list = ['page', 'header_email', 'ip_log', 'ip_lat', 'country_code',
+                           'referrer', 'user_agent']
+    column_filters = ['page', 'access_type', 'email', 'country']
 
     # Bug in Flask admin, don't use disabled: True
     # Bug in Flask admin, readonly doesn't work with boolean and ListFields
