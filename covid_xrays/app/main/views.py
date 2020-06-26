@@ -34,7 +34,7 @@ def server_shutdown():
 @main.route('/list')
 def index():
     apps = [
-        {'name': 'COIVD19 screening from X-rays', 'link': '/covid_form/'},
+        {'name': 'COIVD19 screening from X-rays', 'link': '/'},
 
     ]
     return render_template('index.html', apps=apps)
