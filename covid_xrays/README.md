@@ -3,11 +3,34 @@ Flask app for COVID Screening using xray images
 
 This is a Flask app for screening patients' xray in order to recommend further COIVD19 testing.
 
+How to run the app for deployment with docker
+==========================
+
+Run docker-compose directly, or optionally, change any desired environment variables by creating 
+a `.env` file which will be read automatically by docker-compose.
+
+** It is very important to make sure that the shared folder has the right user NOT root owner. **
+
+```bash
+git clone git@github.com:doaa-altarawy/covid_xrays.git
+cd covid_xrays
+# create the host volume folder with non-root access
+mkdir docker_data
+chown -R $USER:$USER docker_data
+# clean unused docker images and containers (optional)
+./dockerclean.sh
+# build and run containers
+docker-compose up -d
+```
+
+The page will be available at
+`http://localhost/`
+
 
 How to run and use for development:
 ===================================
 
-### 1- Install Python requiremets:
+### 1- Install Python requirements:
 
 Run in shell, create python env, and install requirements:
 
@@ -58,23 +81,4 @@ flask run
 ```
 
 
-## To Use Docker Compose (instead of the above steps):
-
-Run docker-compose directly, or optionally, change any desired environment variables by creating 
-a `.env` file which will be read automatically by docker-compose.
-
-** It is very important to make sure that the shared folder has the right user NOT root owner. **
-
-```bash
-# create the host volume folder with non-root access
-mkdir docker_data
-chown -R myUser:myUse docker_data
-# clean unused docker images and containers
-./dockerclean.sh
-# build and run containers
-docker-compose up --build 
-```
-
-The page will be available at
-`http://localhost/`
 
