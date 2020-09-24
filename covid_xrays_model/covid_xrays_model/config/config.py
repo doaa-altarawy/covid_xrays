@@ -8,6 +8,7 @@ SEED = 0
 PACKAGE_ROOT = pathlib.Path(covid_xrays_model.__file__).resolve().parent
 TRAINED_MODEL_DIR = PACKAGE_ROOT / 'trained_models'
 
+# Best model deployed on AWS
 BEST_MODEL_PARAMS = {
     'sample_size': 5000,
     'image_size': 420,
@@ -18,7 +19,7 @@ BEST_MODEL_PARAMS = {
 }
 
 
-TESTING_DATA_FILE = 'test_data.csv'  # for pytest
+TESTING_DATA_FILE = 'test_data.csv'  # for pytest only
 
 PIPELINE_NAME = 'covid_xrays_model'
 PIPELINE_SAVE_FILE = f'{PIPELINE_NAME}_output_v'

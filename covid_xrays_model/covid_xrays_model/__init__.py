@@ -14,7 +14,7 @@ with open(os.path.join(config.PACKAGE_ROOT, 'VERSION')) as version_file:
 
 logger = logging.getLogger(__name__)
 # logger.addHandler(logging.StreamHandler())
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.INFO)
 logger.addHandler(logging_config.get_console_handler())
 # logger.propagate = False
 

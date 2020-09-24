@@ -19,8 +19,24 @@ logger = logging.getLogger(__name__)
 
 
 def run_training_sample(sample_size=300, image_size=420, n_cycles=10,
-                        with_focal_loss=True, with_oversampling=True,
-                        with_weighted_loss=False):
+                        with_focal_loss=False, with_oversampling=True,
+                        with_weighted_loss=True):
+    """
+
+    :param sample_size: number of images per class
+            if the input file has less than the given number, only the existing ones are used
+    :param image_size:
+            Size of the image in image augmantation pre-processing
+    :param n_cycles:
+            epochs
+    :param with_focal_loss: bool
+        Use it if data is balanced
+    :param with_oversampling: bool
+        Use oversampling for the mintority class of COVID xrays to match the `sample_size`
+    :param with_weighted_loss: bool
+        Use weighted loss for unbalaned sample size in classes
+    :return:
+    """
 
     data = load_dataset(sample_size=sample_size, image_size=image_size)
 
@@ -35,14 +51,14 @@ def run_training_sample(sample_size=300, image_size=420, n_cycles=10,
 
     # handle unbalanced data with weights
     # ['COVID-19', 'normal', 'pneumonia']
-    if with_focal_loss:
-        learn.loss_func = FocalLoss()
-    elif with_weighted_loss:
+    if with_weighted_loss:
         classes = {c:1 for c in learn.data.classes}
         classes['COVID-19'] = 5
         learn.loss_func = CrossEntropyLoss(weight=tensor(list(classes.values()),
                                            dtype=torch.float, device=fastai.torch_core.defaults.device),
                                            reduction='mean')
+    elif with_focal_loss:
+        learn.loss_func = FocalLoss()
 
     learn.fit_one_cycle(n_cycles)
 
