@@ -18,7 +18,7 @@ import fastai
 logger = logging.getLogger(__name__)
 
 
-def run_training_sample(sample_size=300, image_size=420, n_cycles=10,
+def run_training_sample(sample_size=300, image_size=224, n_cycles=10,
                         with_focal_loss=False, with_oversampling=True,
                         with_weighted_loss=True):
     """
@@ -68,7 +68,7 @@ def run_training_sample(sample_size=300, image_size=420, n_cycles=10,
     _save_classification_interpert(learn)
 
 
-def plot_learning_rate(sample_size=300, image_size=420, load_learner=True):
+def plot_learning_rate(sample_size=300, image_size=224, load_learner=True):
 
     data = load_dataset(sample_size=sample_size, image_size=image_size)
 
@@ -83,7 +83,7 @@ def plot_learning_rate(sample_size=300, image_size=420, load_learner=True):
     learn.recorder.plot(return_fig=True).savefig('learning_rate.png', dpi=200)
 
 
-def improve_saved_model(sample_size=300, image_size=420, n_cycles=5,
+def improve_saved_model(sample_size=300, image_size=224, n_cycles=5,
                         max_lr=slice(1e-6,1e-4), save=False,
                         with_focal_loss=False, with_oversampling=True,
                         with_weighted_loss=True):

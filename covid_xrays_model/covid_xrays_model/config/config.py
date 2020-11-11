@@ -11,7 +11,7 @@ TRAINED_MODEL_DIR = PACKAGE_ROOT / 'trained_models'
 # Best model deployed on AWS
 BEST_MODEL_PARAMS = {
     'sample_size': 5000,
-    'image_size': 420,
+    'image_size': 420,  # 224
     'n_cycles': 10,
     'with_focal_loss': False,
     'with_oversampling': True,

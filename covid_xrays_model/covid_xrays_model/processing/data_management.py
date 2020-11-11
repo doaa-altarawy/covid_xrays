@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 learner_cache = {}
 
 
-def load_dataset(*, sample_size=600, image_size=420) -> ImageDataBunch:
+def load_dataset(*, sample_size=600, image_size=224) -> ImageDataBunch:
 
     labels = pd.read_csv(config.PROCESSED_DATA_DIR / 'labels_full.csv')
 
