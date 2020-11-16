@@ -95,7 +95,7 @@ def _get_postfix(with_focal_loss=False,
 
 
 def load_saved_learner(with_focal_loss=False, with_oversampling=False,
-                       sample_size=None, cpu=True, with_weighted_loss=False):
+                       sample_size=None, with_weighted_loss=False, cpu=True):
 
     postfix = _get_postfix(with_focal_loss, with_oversampling, sample_size, with_weighted_loss)
 

@@ -10,12 +10,16 @@ logger = logging.getLogger(__name__)
 
 
 
-def make_prediction_sample(image_path, cpu=True):
+def make_prediction_sample(image_path, cpu=True,
+                           sample_size=config.BEST_MODEL_PARAMS['sample_size'],
+                           with_oversampling=config.BEST_MODEL_PARAMS['with_oversampling'],
+                           with_focal_loss=config.BEST_MODEL_PARAMS['with_focal_loss'],
+                           with_weighted_loss=config.BEST_MODEL_PARAMS['with_weighted_loss'],):
 
-    learn = load_saved_learner(sample_size=config.BEST_MODEL_PARAMS['sample_size'],
-                               with_oversampling=config.BEST_MODEL_PARAMS['with_oversampling'],
-                               with_focal_loss=config.BEST_MODEL_PARAMS['with_focal_loss'],
-                               with_weighted_loss=config.BEST_MODEL_PARAMS['with_weighted_loss'],
+    learn = load_saved_learner(sample_size=sample_size,
+                               with_oversampling=with_oversampling,
+                               with_focal_loss=with_focal_loss,
+                               with_weighted_loss=with_weighted_loss,
                                cpu=cpu)
 
     # load image in grayscale
@@ -28,13 +32,19 @@ def make_prediction_sample(image_path, cpu=True):
     return cat[0].obj, class_prob
 
 
-def predict_dataset(ds_type: str='test'):
+def predict_dataset(ds_type: str='test', cpu=True,
+                    sample_size=config.BEST_MODEL_PARAMS['sample_size'],
+                    with_oversampling=config.BEST_MODEL_PARAMS['with_oversampling'],
+                    with_focal_loss=config.BEST_MODEL_PARAMS['with_focal_loss'],
+                    with_weighted_loss=config.BEST_MODEL_PARAMS['with_weighted_loss'],
+                    confusion_matrix_filename='test_confusion_matrix'):
 
-    learn = load_saved_learner(sample_size=config.BEST_MODEL_PARAMS['sample_size'],
-                               with_oversampling=config.BEST_MODEL_PARAMS['with_oversampling'],
-                               with_focal_loss=config.BEST_MODEL_PARAMS['with_focal_loss'],
-                               with_weighted_loss=config.BEST_MODEL_PARAMS['with_weighted_loss']
-                               )
+    learn = load_saved_learner(sample_size=sample_size,
+                               with_oversampling=with_oversampling,
+                               with_focal_loss=with_focal_loss,
+                               with_weighted_loss=with_weighted_loss,
+                               cpu=cpu)
+
 
     classes = {c: i for i, c in enumerate(learn.data.classes)}
 
@@ -45,18 +55,21 @@ def predict_dataset(ds_type: str='test'):
 
     print(f'Running predictions on {data.shape[0]} data samples')
 
-    data['y_pred'] = data.name.apply(lambda x:
-                                     learn.predict(open_image(config.PROCESSED_DATA_DIR / x, convert_mode='L')))
-    pred_tesnor = data.y_pred.apply(lambda x: x[2].tolist()).to_list()
-    pred_tesnor = tensor(np.array(pred_tesnor))
+    data['pred_probability'] = pd.Series(dtype=object)
+    for k, i in enumerate(data.index):
+        pred = learn.predict(open_image(config.PROCESSED_DATA_DIR / data.loc[i, 'name'], convert_mode='L'))
+        data.loc[i, 'y_pred'] = pred[0].data.item()
+        data.at[i, 'pred_probability'] = pred[2].numpy()
+        if k % 200 == 0 and k > 0:
+            print(f'{k} images done..')
 
-    data.to_csv(config.PROCESSED_DATA_DIR / 'predictions.csv')
+    data.to_csv(config.DATA_DIR / 'predictions.csv', index=False)
 
     print(f'Building classification interpretation..')
     interp = ClassificationInterpretation(learn=learn, losses=np.zeros(data.shape[0]),
-                                                preds=pred_tesnor,
-                                                y_true=tensor(data.label_int.to_list())
-                                               )
+                                          preds=tensor(data['pred_probability'].to_list()),
+                                          y_true=tensor(data.label_int.to_list())
+                                         )
     mat = interp.confusion_matrix()
 
     # sum diagonal / all data_size *100
@@ -65,8 +78,10 @@ def predict_dataset(ds_type: str='test'):
     print(mat)
     print(f'Accuracy: {accuracy}')
 
-    interp.plot_confusion_matrix(return_fig=True).savefig(config.PROCESSED_DATA_DIR / 'confusion_matrix.png', dpi=200)
-    joblib.dump(mat, config.PROCESSED_DATA_DIR / 'confusion_matrix.pkl')
+    interp.plot_confusion_matrix(return_fig=True).savefig(config.DATA_DIR / confusion_matrix_filename, dpi=200)
+    joblib.dump(mat, config.DATA_DIR / f'{confusion_matrix_filename}.pkl')
+
+    return mat, accuracy
 
 
 if __name__ == "__main__":

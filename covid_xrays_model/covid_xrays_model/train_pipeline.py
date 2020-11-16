@@ -5,6 +5,7 @@ np.random.seed(config.SEED)
 from covid_xrays_model.processing.data_management import save_learner, \
     load_saved_learner, load_dataset
 import logging
+import joblib
 from torch import nn, tensor
 import torch
 import torch.nn.functional as F
@@ -20,7 +21,8 @@ logger = logging.getLogger(__name__)
 
 def run_training_sample(sample_size=300, image_size=224, n_cycles=10,
                         with_focal_loss=False, with_oversampling=True,
-                        with_weighted_loss=True):
+                        with_weighted_loss=True,
+                        confusion_matrix_filename='train_confusion_matrix'):
     """
 
     :param sample_size: number of images per class
@@ -65,7 +67,7 @@ def run_training_sample(sample_size=300, image_size=224, n_cycles=10,
     save_learner(learn, with_focal_loss=with_focal_loss, with_oversampling=with_oversampling,
                  sample_size=sample_size, with_weighted_loss=with_weighted_loss)
 
-    _save_classification_interpert(learn)
+    _save_classification_interpert(learn, confusion_matrix_filename=confusion_matrix_filename)
 
 
 def plot_learning_rate(sample_size=300, image_size=224, load_learner=True):
@@ -104,12 +106,17 @@ def improve_saved_model(sample_size=300, image_size=224, n_cycles=5,
     _save_classification_interpert(learn)
 
 
-def _save_classification_interpert(learn: Learner):
+def _save_classification_interpert(learn: Learner, confusion_matrix_filename='confusion_matrix'):
 
-    interp = ClassificationInterpretation.from_learner(learn)
-    interp.plot_confusion_matrix(return_fig=True).savefig('confusion_matrix.png', dpi=200)
-    interp.plot_top_losses(9, return_fig=True, figsize=(15,15)).savefig('top_losses.png', dpi=200)
+    # interp = ClassificationInterpretation.from_learner(learn)
+    train_interp = learn.interpret(ds_type=fastai.vision.DatasetType.Train)
+    valid_interp = learn.interpret(ds_type=fastai.vision.DatasetType.Valid)
 
+    joblib.dump(train_interp.confusion_matrix(), f'train_{confusion_matrix_filename}.pkl')
+    joblib.dump(valid_interp.confusion_matrix(), f'valid_{confusion_matrix_filename}.pkl')
+
+    train_interp.plot_confusion_matrix(return_fig=True).savefig(f'train_{confusion_matrix_filename}', dpi=200)
+    train_interp.plot_top_losses(9, return_fig=True, figsize=(14,14)).savefig('top_losses.png', dpi=200)
 
 
 class FocalLoss(nn.Module):
@@ -135,7 +142,7 @@ class FocalLoss(nn.Module):
 
 
 if __name__ == '__main__':
-   run_training_sample(sample_size=config.BEST_MODEL_PARAMS['sample_size'],
+   run_training_sample(sample_size=100, #config.BEST_MODEL_PARAMS['sample_size'],
                        image_size=config.BEST_MODEL_PARAMS['image_size'],
                        n_cycles=config.BEST_MODEL_PARAMS['n_cycles'],
                        with_oversampling=config.BEST_MODEL_PARAMS['with_oversampling'],
