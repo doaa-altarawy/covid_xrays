@@ -78,8 +78,8 @@ def predict_dataset(ds_type: str='test', cpu=True,
     print(mat)
     print(f'Accuracy: {accuracy}')
 
-    interp.plot_confusion_matrix(return_fig=True).savefig(config.DATA_DIR / confusion_matrix_filename, dpi=200)
-    joblib.dump(mat, config.DATA_DIR / f'{confusion_matrix_filename}.pkl')
+    interp.plot_confusion_matrix(return_fig=True).savefig(f'test_{confusion_matrix_filename}', dpi=200)
+    joblib.dump(mat, f'test_{confusion_matrix_filename}.pkl')
 
     return mat, accuracy
 
