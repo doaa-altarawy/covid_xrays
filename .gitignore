@@ -140,3 +140,5 @@ docker_data/
 node_modules/
 uploads/
 covid_xrays_model/covid_xrays_model/model_search/
+notebooks/*.pkl
+notebooks/*.png
