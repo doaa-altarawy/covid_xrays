@@ -27,7 +27,7 @@ PIPELINE_SAVE_FILE = f'{PIPELINE_NAME}_output_v'
 DATA_DIR = pathlib.Path(os.environ.get('DATA_DIR') or PACKAGE_ROOT.parents[1] / 'data')
 RAW_DATA_DIR = DATA_DIR / 'raw'
 PROCESSED_DATA_DIR = DATA_DIR / 'processed'
-
+GAN_DATA_DIR = PROCESSED_DATA_DIR / 'GAN_images'
 
 # -------------------------  datasets --------------------------
 

@@ -37,12 +37,14 @@ def predict_dataset(ds_type: str='test', cpu=True,
                     with_oversampling=config.BEST_MODEL_PARAMS['with_oversampling'],
                     with_focal_loss=config.BEST_MODEL_PARAMS['with_focal_loss'],
                     with_weighted_loss=config.BEST_MODEL_PARAMS['with_weighted_loss'],
-                    confusion_matrix_filename='test_confusion_matrix'):
+                    confusion_matrix_filename='test_confusion_matrix',
+                    percent_gan_images=None):
 
     learn = load_saved_learner(sample_size=sample_size,
                                with_oversampling=with_oversampling,
                                with_focal_loss=with_focal_loss,
                                with_weighted_loss=with_weighted_loss,
+                               percent_gan_images=percent_gan_images,
                                cpu=cpu)
 
 

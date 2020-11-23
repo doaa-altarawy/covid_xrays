@@ -10,6 +10,7 @@ from sklearn.model_selection import train_test_split
 from fastai.vision import load_learner, Learner, ImageDataBunch, get_transforms, imagenet_stats
 import fastai
 import torch
+import pathlib
 
 
 logger = logging.getLogger(__name__)
@@ -18,7 +19,7 @@ logger = logging.getLogger(__name__)
 learner_cache = {}
 
 
-def load_dataset(*, sample_size=600, image_size=224) -> ImageDataBunch:
+def load_dataset(*, sample_size=600, image_size=224, percent_gan_images=None) -> ImageDataBunch:
 
     labels = pd.read_csv(config.PROCESSED_DATA_DIR / 'labels_full.csv')
 
@@ -30,10 +31,23 @@ def load_dataset(*, sample_size=600, image_size=224) -> ImageDataBunch:
             selected.extend(labels[(labels.label == c) & (labels.ds_type == t)][:sample_size].values.tolist())
 
     subset = pd.DataFrame(selected, columns=labels.columns)
+
+    # Add GAN generated images to COVID dataset
+    if percent_gan_images > 0:
+        n_covid_images_needed = sample_size - subset[subset.label == "COVID-19"].shape[0]
+        n_gan_sample = percent_gan_images * n_covid_images_needed // 100
+        # walk through the directory and read GAN files names
+        files = []
+        for path in pathlib.Path(config.GAN_DATA_DIR).iterdir():
+            sudirectory_path = '/'.join(path.parts[-2:])
+            files.append(['', sudirectory_path, 'COVID-19', 'GAN', 'train'])
+
+        gan_images = pd.DataFrame(files, columns=labels.columns).iloc[:n_gan_sample]
+        subset = pd.concat([subset, gan_images])
+
     subset[['name', 'label']].to_csv(config.PROCESSED_DATA_DIR / 'labels.csv', index=False)
 
     tfms = _get_image_transformation()
-
 
     # will read from "labels.csv" in the data directory
     data = ImageDataBunch.from_csv(config.PROCESSED_DATA_DIR,
@@ -79,7 +93,8 @@ def get_train_test_split(data: pd.DataFrame, test_size=config.TEST_SIZE, train_s
 
 
 def _get_postfix(with_focal_loss=False,
-                 with_oversampling=False, sample_size=None, with_weighted_loss=False):
+                 with_oversampling=False, sample_size=None, with_weighted_loss=False,
+                 percent_gan_images=None):
 
     postfix = ''
     if with_oversampling:
@@ -90,14 +105,16 @@ def _get_postfix(with_focal_loss=False,
         postfix += '_weighted_loss'
     if sample_size:
         postfix += f'_{sample_size}'
+    if percent_gan_images:
+        postfix+= f'_{percent_gan_images}'
 
     return postfix
 
 
 def load_saved_learner(with_focal_loss=False, with_oversampling=False,
-                       sample_size=None, with_weighted_loss=False, cpu=True):
+                       sample_size=None, with_weighted_loss=False, cpu=True, percent_gan_images=None):
 
-    postfix = _get_postfix(with_focal_loss, with_oversampling, sample_size, with_weighted_loss)
+    postfix = _get_postfix(with_focal_loss, with_oversampling, sample_size, with_weighted_loss, percent_gan_images)
 
     save_file_name = f'{config.PIPELINE_SAVE_FILE}{_version}{postfix}.pkl'
 
@@ -124,9 +141,10 @@ def load_saved_learner(with_focal_loss=False, with_oversampling=False,
 
 
 def save_learner(learn: Learner, with_focal_loss=False,
-                 with_oversampling=False, sample_size=None, with_weighted_loss=False):
+                 with_oversampling=False, sample_size=None, with_weighted_loss=False,
+                 percent_gan_images=''):
 
-    postfix = _get_postfix(with_focal_loss, with_oversampling, sample_size, with_weighted_loss)
+    postfix = _get_postfix(with_focal_loss, with_oversampling, sample_size, with_weighted_loss, percent_gan_images)
 
     save_file_name = f'{config.PIPELINE_SAVE_FILE}{_version}{postfix}.pkl'
     save_path = config.TRAINED_MODEL_DIR / save_file_name
@@ -184,4 +202,5 @@ def save_data(*, X, y, file_name : str, max_rows=-1):
         tmp.to_csv(save_path, index=False)
 
 if __name__ == "__main__":
-    learn = load_saved_learner(with_focal_loss=False, with_oversampling=True, sample_size=5000)
+    # learn = load_saved_learner(with_focal_loss=False, with_oversampling=True, sample_size=5000)
+    load_dataset(sample_size=5000, percent_gan_images=10)

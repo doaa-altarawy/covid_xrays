@@ -22,7 +22,8 @@ logger = logging.getLogger(__name__)
 def run_training_sample(sample_size=300, image_size=224, n_cycles=10,
                         with_focal_loss=False, with_oversampling=True,
                         with_weighted_loss=True,
-                        confusion_matrix_filename='train_confusion_matrix'):
+                        confusion_matrix_filename='train_confusion_matrix',
+                        percent_gan_images=0):
     """
 
     :param sample_size: number of images per class
@@ -37,10 +38,13 @@ def run_training_sample(sample_size=300, image_size=224, n_cycles=10,
         Use oversampling for the mintority class of COVID xrays to match the `sample_size`
     :param with_weighted_loss: bool
         Use weighted loss for unbalaned sample size in classes
+    :param percent_gan_images: percent og GAN generated to use (between 0-100)
+        If with_oversampling is True, the it's used after adding GAN images
     :return:
     """
 
-    data = load_dataset(sample_size=sample_size, image_size=image_size)
+    data = load_dataset(sample_size=sample_size, image_size=image_size,
+                        percent_gan_images=percent_gan_images)
 
     callbacks = None
     if with_oversampling:
@@ -65,7 +69,8 @@ def run_training_sample(sample_size=300, image_size=224, n_cycles=10,
     learn.fit_one_cycle(n_cycles)
 
     save_learner(learn, with_focal_loss=with_focal_loss, with_oversampling=with_oversampling,
-                 sample_size=sample_size, with_weighted_loss=with_weighted_loss)
+                 sample_size=sample_size, with_weighted_loss=with_weighted_loss,
+                 percent_gan_images=percent_gan_images)
 
     _save_classification_interpert(learn, confusion_matrix_filename=confusion_matrix_filename)
 
