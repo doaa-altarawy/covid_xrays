@@ -33,7 +33,7 @@ def load_dataset(*, sample_size=600, image_size=224, percent_gan_images=None) ->
     subset = pd.DataFrame(selected, columns=labels.columns)
 
     # Add GAN generated images to COVID dataset
-    if percent_gan_images > 0:
+    if percent_gan_images and percent_gan_images > 0:
         n_covid_images_needed = sample_size - subset[subset.label == "COVID-19"].shape[0]
         n_gan_sample = percent_gan_images * n_covid_images_needed // 100
         # walk through the directory and read GAN files names
