@@ -40,6 +40,8 @@ pytest>=4.6.6
 # AWS GPU runs
 #torch==1.4
 
-torch>=1.6
-torchvision>=0.7
+#torch>=1.6
+#torchvision>=0.7
+torch==1.7.1
+torchvision==0.8.2
 fastai==1.0.61
