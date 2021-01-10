@@ -1,0 +1,8 @@
+name: covid_xrays
+
+dependencies:
+  - python=3.8
+  - pip
+  - pip:
+      - requests
+      - git+https://github.com/doaa-altarawy/covid_xrays.git#egg=covid_xrays_model&subdirectory=covid_xrays_model
