@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 learner_cache = {}
 
 
-def load_dataset(*, sample_size=600, image_size=224, percent_gan_images=None) -> ImageDataBunch:
+def load_dataset(*, sample_size=600, image_size=224, percent_gan_images=None, batch_size=128) -> ImageDataBunch:
 
     labels = pd.read_csv(config.PROCESSED_DATA_DIR / 'labels_full.csv')
 
@@ -56,7 +56,7 @@ def load_dataset(*, sample_size=600, image_size=224, percent_gan_images=None) ->
                                    valid_pct=0.1,
                                    seed=config.SEED,
                                    size=image_size,
-                                   bs=21)
+                                   bs=batch_size)
 
     data.normalize(imagenet_stats)
 

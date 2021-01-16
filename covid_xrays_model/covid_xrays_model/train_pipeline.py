@@ -23,7 +23,7 @@ def run_training_sample(sample_size=300, image_size=224, n_cycles=10,
                         with_focal_loss=False, with_oversampling=True,
                         with_weighted_loss=True,
                         confusion_matrix_filename='train_confusion_matrix',
-                        percent_gan_images=0):
+                        percent_gan_images=0, batch_size=128):
     """
 
     :param sample_size: number of images per class
@@ -44,7 +44,7 @@ def run_training_sample(sample_size=300, image_size=224, n_cycles=10,
     """
 
     data = load_dataset(sample_size=sample_size, image_size=image_size,
-                        percent_gan_images=percent_gan_images)
+                        percent_gan_images=percent_gan_images, batch_size=batch_size)
 
     callbacks = None
     if with_oversampling:
@@ -121,6 +121,8 @@ def _save_classification_interpert(learn: Learner, confusion_matrix_filename='co
     joblib.dump(valid_interp.confusion_matrix(), f'valid_{confusion_matrix_filename}.pkl')
 
     train_interp.plot_confusion_matrix(return_fig=True).savefig(f'train_{confusion_matrix_filename}', dpi=200)
+    valid_interp.plot_confusion_matrix(return_fig=True).savefig(f'valid_{confusion_matrix_filename}', dpi=200)
+
     train_interp.plot_top_losses(9, return_fig=True, figsize=(14,14)).savefig('top_losses.png', dpi=200)
 
 
