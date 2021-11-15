@@ -1,5 +1,5 @@
 # conda
-pip==20.0.2
+pip==21.1
 pandas
 scikit-learn
 matplotlib
